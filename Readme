@@ -1,0 +1,22 @@
+Readme
+
+To run inventaire in a docker-compose setup
+
+## Install
+
+Get [docker-compose](https://docs.docker.com/compose/gettingstarted/) on your machine
+
+Clone this repo
+```
+git clone https://github.com/inventaire/inventaire-docker.git
+cd inventaire-docker
+```
+
+then setup you own inventaire locally within inventaire-docker folder.
+Copy docker utils files into inventaire folder if necessary
+
+```
+git clone https://github.com/inventaire/inventaire.git
+cp utils/config/local.coffee inventaire/config/local.coffee
+docker-compose up -d
+```

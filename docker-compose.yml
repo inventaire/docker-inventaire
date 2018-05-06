@@ -1,0 +1,19 @@
+version: '3'
+services:
+  couch:
+    image: couchdb:1.7.1
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: "couchdb"
+      COUCHDB_PASSWORD: "password"
+  app:
+    image: node:6.11.1
+    command: "npm start"
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./inventaire:/inventaire
+    links:
+      - couch
+    working_dir: /inventaire
