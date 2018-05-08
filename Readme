@@ -20,3 +20,20 @@ git clone https://github.com/inventaire/inventaire.git
 cp utils/config/local.coffee inventaire/config/local.coffee
 docker-compose up -d
 ```
+
+## Fixtures
+
+You will propbably want to play with some fixtures data.
+
+- Start the containers
+- Run api tests to populate tests dbs:
+
+```
+docker-compose exec app npm run test-api
+```
+
+- Replicate `*-tests` dbs documents into `*` dbs
+
+```
+docker-compose exec app npm run replicate-tests-db
+```
