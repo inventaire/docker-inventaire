@@ -1,6 +1,8 @@
 module.exports =
-  env: 'production'
   host: '0.0.0.0'
+  elasticsearch:
+    host: '0.0.0.0'
+    port: '9200'
   db:
     protocol: 'http'
     # host defined in docker-compose couchdb image name
@@ -9,3 +11,9 @@ module.exports =
     username: 'couchdb'
     password: 'password'
     debug: true
+  runJobsInQueue:
+    'wd:popularity': false
+  entitiesSearchEngine:
+    updateEnabled: false
+    localPath: '/opt/entities-search-engine'
+    delay: 3000

@@ -7,13 +7,32 @@ services:
     environment:
       COUCHDB_USER: "couchdb"
       COUCHDB_PASSWORD: "password"
-  app:
+  inventaire:
     image: node:6.11.1
     command: "npm start"
     ports:
       - "3006:3006"
     volumes:
-      - ./inventaire:/inventaire
+      - ./inventaire:/opt/inventaire
     links:
       - couch
-    working_dir: /inventaire
+    working_dir: /opt/inventaire
+    depends_on:
+      - entities-search-engine
+  elasticsearch:
+    image: elasticsearch
+    environment:
+      - 'http.host=0.0.0.0'
+      - 'transport.host=127.0.0.1'
+    ports :
+      - '127.0.0.1:9200:9200'
+  entities-search-engine:
+    image: node:6.11.1
+    command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
+    ports:
+      - "3213:3213"
+    volumes:
+      - ./entities-search-engine:/opt/entities-search-engine
+    links:
+      - couch
+    working_dir: /opt/entities-search-engine
