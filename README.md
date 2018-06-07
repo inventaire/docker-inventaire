@@ -1,10 +1,12 @@
-Readme
+Run your own inventaire in a docker environment
 
-To run inventaire in a docker-compose setup
+## Requirements
+
+- [docker-compose](https://docs.docker.com/compose/gettingstarted/) up and ready
+- git
+
 
 ## Install
-
-Get [docker-compose](https://docs.docker.com/compose/gettingstarted/) on your machine
 
 Clone this repo
 
@@ -17,7 +19,7 @@ got to `cd inventaire-docker`
 clone the two repos inventaire needs to run :
 
  - `inventaire` -> [setup](https://github.com/inventaire/inventaire#installation)
- - `entities-search-engine`
+ - `entities-search-engine` -> [go to repo](https://github.com/inventaire/entities-search-engine)
 
 ```
 git clone https://github.com/inventaire/inventaire.git
@@ -30,13 +32,23 @@ Copy docker utils files into inventaire folder if necessary
 cp (or ln) utils/config/local.coffee inventaire/config/local.coffee
 ```
 
-Start the magic
+Start the magic, build everything at once !
 
 ```
 docker-compose up --build
 ```
 
-Once containers have been build, you can simply `docker-compose up`
+## Useful commands
+
+`docker-compose up` : start containers if already built
+
+`docker-compose down` : kill active containers
+
+`docker rm $(docker ps -a -q)` : delete stopped containers
+
+`docker rmi $(docker images -q -f dangling=true)` : delete untagged images
+
+Check out [official doc](https://docs.docker.com/compose/)
 
 ## Load wikidata into elasticsearch
 
