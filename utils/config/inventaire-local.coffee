@@ -1,7 +1,7 @@
 module.exports =
   host: '0.0.0.0'
   elasticsearch:
-    host: '0.0.0.0'
+    host: 'elasticsearch'
     port: '9200'
   db:
     protocol: 'http'

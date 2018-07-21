@@ -5,10 +5,7 @@ Run your own inventaire in a docker environment
 - [docker-compose](https://docs.docker.com/compose/gettingstarted/) up and ready
 - git
 
-
 ## Install
-
-Clone this repo
 
 ```
 git clone https://github.com/inventaire/inventaire-docker.git
@@ -18,18 +15,12 @@ got to `cd inventaire-docker`
 
 clone the two repos inventaire needs to run :
 
- - `inventaire` -> [setup](https://github.com/inventaire/inventaire#installation)
- - `entities-search-engine` -> [go to repo](https://github.com/inventaire/entities-search-engine)
+ - `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
+ - `entities-search-engine` for querying entities -> [go to repo](https://github.com/inventaire/entities-search-engine)
 
 ```
 git clone https://github.com/inventaire/inventaire.git
 git clone https://github.com/inventaire/entities-search-engine.git
-```
-
-Copy docker utils files into inventaire folder if necessary
-
-```
-cp (or ln) utils/config/local.coffee inventaire/config/local.coffee
 ```
 
 Start the magic, build everything at once !
