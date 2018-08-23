@@ -7,6 +7,8 @@ services:
     environment:
       COUCHDB_USER: "couchdb"
       COUCHDB_PASSWORD: "password"
+    volumes:
+      - './data/couch:/usr/local/var/lib/couchdb'
   inventaire:
     build:
       context: ./.
@@ -27,8 +29,11 @@ services:
       - 'transport.host=127.0.0.1'
     ports :
       - '127.0.0.1:9200:9200'
+    volumes:
+      # backup folder when ES container is removed
+      - './data/es:/usr/share/elasticsearch/data'
   entities-search-engine:
-    image: node:6.11.1
+    image: node:8
     command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
     ports:
       - "3213:3213"
