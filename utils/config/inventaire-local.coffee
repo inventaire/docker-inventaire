@@ -1,8 +1,7 @@
 module.exports =
   host: '0.0.0.0'
   elasticsearch:
-    host: 'elasticsearch'
-    port: '9200'
+    host: 'http://elasticsearch:9200'
   db:
     protocol: 'http'
     # host defined in docker-compose couchdb image name

@@ -1,0 +1,4 @@
+FROM node:6.11.1
+ENV USER=inventaire
+
+CMD [ "node_modules/coffee-script/bin/coffee", "server/server.coffee"]
