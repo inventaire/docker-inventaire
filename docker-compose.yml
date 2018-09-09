@@ -40,7 +40,6 @@ services:
     volumes:
       - ./entities-search-engine:/opt/entities-search-engine
       - ./utils/config/entities-search-engine-local.coffee:/opt/entities-search-engine/config/local.coffee
-      - ./utils/elastic_setup.sh:/opt/entities-search-engine/
     links:
       - couch
     working_dir: /opt/entities-search-engine

@@ -46,7 +46,7 @@ Check out [official doc](https://docs.docker.com/compose/)
 Make sure ES import limit is above entities-search-engige import rate, by raising the limit
 
 ```
-docker-compose exec entities-search-engine curl -XPUT http://elasticsearch:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 2000}'
+docker-compose exec entities-search-engine curl -XPUT http://elasticsearch:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
 ```
 
 start the containers `docker-compose up`
