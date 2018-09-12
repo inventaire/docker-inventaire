@@ -63,14 +63,25 @@ for more [info](https://github.com/inventaire/entities-search-engine/blob/master
 
 In case you would like to play with out-of-the-box data.
 
-Run api tests to populate tests dbs:
-
+Run api tests to populate tests dbs (see Tests section)
 ```
-docker-compose exec inventaire npm run test-api
+`docker-compose -f docker-compose-test.yml exec inventaire npm run test-api`
 ```
 
 - Replicate `*-tests` dbs documents into `*` dbs
 
 ```
-docker-compose exec inventaire npm run replicate-tests-db
+`docker-compose exec inventaire npm run replicate-tests-db`
 ```
+
+## Test environement
+
+Start docker-compose-test `docker-compose -f docker-compose-test.yml up`
+
+Execute tests script
+
+`docker-compose exec inventaire npm run test-api`
+
+or execute directly the test command
+
+`docker-compose exec inventaire ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --timeout 20000`

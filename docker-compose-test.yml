@@ -1,0 +1,48 @@
+version: '3'
+services:
+  couch:
+    image: couchdb:1.7.1
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: "couchdb"
+      COUCHDB_PASSWORD: "password"
+    volumes:
+      # backup folder when container is removed
+      - './data/couch-test:/usr/local/var/lib/couchdb'
+  inventaire:
+    build:
+      context: ./.
+      dockerfile: Dockerfile.inventaire
+    environment:
+      NODE_ENV: "tests"
+      NODE_APP_INSTANCE: "tests-alt"
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./inventaire:/opt/inventaire
+      - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
+    working_dir: /opt/inventaire
+    depends_on:
+      - couch
+      - entities-search-engine
+  elasticsearch:
+    image: elasticsearch
+    environment:
+      - 'http.host=0.0.0.0'
+      - 'transport.host=127.0.0.1'
+    ports :
+      - '127.0.0.1:9200:9200'
+    volumes:
+      - './data/es:/usr/share/elasticsearch/data'
+  entities-search-engine:
+    image: node:8
+    command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
+    ports:
+      - "3213:3213"
+    volumes:
+      - ./entities-search-engine:/opt/entities-search-engine
+      - ./utils/config/entities-search-engine-local.coffee:/opt/entities-search-engine/config/local.coffee
+    links:
+      - couch
+    working_dir: /opt/entities-search-engine
