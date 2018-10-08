@@ -11,8 +11,15 @@ module.exports =
     username: 'couchdb'
     password: 'password'
     debug: true
-  runJobsInQueue:
-    'wd:popularity': false
+    enableDesignDocSync: true
+  replication:
+    username: 'couchdb'
+    password: 'password'
+  jobs:
+    'wd:popularity':
+      run: false
+    'inv:deduplicate':
+      run: true
   entitiesSearchEngine:
     updateEnabled: false
     localPath: '/opt/entities-search-engine'
