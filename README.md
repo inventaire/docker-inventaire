@@ -23,6 +23,8 @@ git clone https://github.com/inventaire/inventaire.git
 git clone https://github.com/inventaire/entities-search-engine.git
 ```
 
+Create empty folders for docker volume to dump backup. In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`
+
 Start the magic, build everything at once !
 
 ```
@@ -57,7 +59,9 @@ type=humans
 docker-compose exec entities-search-engine ./bin/dump_wikidata_subset $claim $type
 ```
 
-for more [info](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.md)
+[more info on importing some wikidata items](https://github.com/inventaire/inventaire-deploy/install_entities_search_engine)
+
+more docs [wikidata filtered dump import](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.mdFv)
 
 ## Fixtures
 
@@ -85,3 +89,7 @@ Execute tests script
 or execute directly the test command
 
 `docker-compose exec inventaire ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --timeout 20000`
+
+Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
+
+`sudo ln ~/path/to/inventaire-docker/inventaire /opt -s`
