@@ -19,10 +19,6 @@ services:
       - ./inventaire:/opt/inventaire
       - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
     working_dir: /opt/inventaire
-    depends_on:
-      - entities-search-engine
-      - couch
-      - elasticsearch
   elasticsearch:
     image: elasticsearch:2.4
     environment:
