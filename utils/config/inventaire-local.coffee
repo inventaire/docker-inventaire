@@ -21,6 +21,6 @@ module.exports =
     'inv:deduplicate':
       run: true
   entitiesSearchEngine:
-    updateEnabled: false
-    localPath: '/opt/entities-search-engine'
+    host: 'http://entities-search-engine:3213'
+    updateEnabled: true
     delay: 3000

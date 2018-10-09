@@ -33,8 +33,11 @@ services:
     volumes:
       - './data/es:/usr/share/elasticsearch/data'
   entities-search-engine:
-    image: node:8
-    command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
+    build:
+      context: ./.
+      dockerfile: Dockerfile.entities-search-engine
+    environment:
+      NODE_ENV: "tests"
     ports:
       - "3213:3213"
     volumes:

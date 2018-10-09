@@ -1,4 +1,2 @@
-FROM node:6.11.1
-ENV USER=inventaire
-
+FROM node:8-alpine
 CMD [ "node_modules/coffee-script/bin/coffee", "server/server.coffee"]
