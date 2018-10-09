@@ -1,15 +1,9 @@
-FROM node:6.11.1
-ENV USER=inventaire
-
+FROM node:8-alpine
 RUN apt-get update \
-  && apt-get -y upgrade \
   && apt-get install -y curl \
   zsh \
   git \
-  nginx \
   graphicsmagick \
-  openssl \
   inotify-tools \
   && apt-get clean
-
 CMD ["npm", "start"]

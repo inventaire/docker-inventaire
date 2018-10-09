@@ -30,7 +30,9 @@ services:
       # backup folder when ES container is removed
       - './data/es:/usr/share/elasticsearch/data'
   entities-search-engine:
-    image: node:8
+    build:
+      context: ./.
+      dockerfile: Dockerfile.entities-search-engine
     command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
     ports:
       - "3213:3213"
