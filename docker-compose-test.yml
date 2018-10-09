@@ -23,10 +23,6 @@ services:
       - ./inventaire:/opt/inventaire
       - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
     working_dir: /opt/inventaire
-    depends_on:
-      - couch
-      - entities-search-engine
-      - elasticsearch
   elasticsearch:
     image: elasticsearch:2.4
     environment:
@@ -44,6 +40,4 @@ services:
     volumes:
       - ./entities-search-engine:/opt/entities-search-engine
       - ./utils/config/entities-search-engine-local.coffee:/opt/entities-search-engine/config/local.coffee
-    links:
-      - couch
     working_dir: /opt/entities-search-engine
