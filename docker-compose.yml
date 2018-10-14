@@ -9,6 +9,7 @@ services:
       COUCHDB_PASSWORD: "password"
     volumes:
       - './data/couch:/usr/local/var/lib/couchdb'
+    network_mode: host
   inventaire:
     build:
       context: ./.
@@ -17,8 +18,8 @@ services:
       - "3006:3006"
     volumes:
       - ./inventaire:/opt/inventaire
-      - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
     working_dir: /opt/inventaire
+    network_mode: host
   elasticsearch:
     image: elasticsearch:2.4
     environment:
@@ -29,6 +30,7 @@ services:
     volumes:
       # backup folder when ES container is removed
       - './data/es:/usr/share/elasticsearch/data'
+    network_mode: host
   entities-search-engine:
     build:
       context: ./.
@@ -38,5 +40,5 @@ services:
       - "3213:3213"
     volumes:
       - ./entities-search-engine:/opt/entities-search-engine
-      - ./utils/config/entities-search-engine-local.coffee:/opt/entities-search-engine/config/local.coffee
     working_dir: /opt/entities-search-engine
+    network_mode: host
