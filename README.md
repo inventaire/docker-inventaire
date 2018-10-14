@@ -69,7 +69,7 @@ In case you would like to play with out-of-the-box data.
 
 Run api tests to populate tests dbs (see Tests section)
 ```
-`docker-compose -f docker-compose-test.yml exec inventaire npm run test-api`
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up exec inventaire npm run test-api
 ```
 
 - Replicate `*-tests` dbs documents into `*` dbs
@@ -78,9 +78,13 @@ Run api tests to populate tests dbs (see Tests section)
 `docker-compose exec inventaire npm run replicate-tests-db`
 ```
 
-## Test environement
+## Tests
 
-Start docker-compose-test `docker-compose -f docker-compose-test.yml up`
+Start services with test environnement with [multiple compose files](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files)
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up
+```
 
 Execute tests script
 
@@ -88,7 +92,7 @@ Execute tests script
 
 or execute directly the test command
 
-`docker-compose exec inventaire ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --timeout 20000`
+`docker-compose exec inventaire ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --timeout 20000 /opt/inventaire/path/to/test/file`
 
 Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
 
