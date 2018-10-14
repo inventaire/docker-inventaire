@@ -1,0 +1,20 @@
+# Use with `docker-compose.yml`. Use the -f option
+# to specify the list of files. Compose merges files in the
+# order they’re specified on the command line.
+# See https://docs.docker.com/compose/extends
+version: '3'
+services:
+  couch:
+    volumes:
+      # backup folder when container is removed
+      - './data/couch-test:/usr/local/var/lib/couchdb'
+  inventaire:
+    environment:
+      NODE_ENV: "tests"
+      NODE_APP_INSTANCE: "tests-alt"
+    volumes:
+      - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
+    working_dir: /opt/inventaire
+  entities-search-engine:
+    environment:
+      NODE_ENV: "tests"
