@@ -12,8 +12,6 @@ services:
     environment:
       NODE_ENV: "tests"
       NODE_APP_INSTANCE: "tests-alt"
-    volumes:
-      - ./utils/config/inventaire-local.coffee:/opt/inventaire/config/local.coffee
     working_dir: /opt/inventaire
   entities-search-engine:
     environment:
