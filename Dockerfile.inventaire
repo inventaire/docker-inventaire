@@ -1,9 +1,7 @@
 FROM node:8-alpine
-RUN apt-get update \
-  && apt-get install -y curl \
-  zsh \
-  git \
-  graphicsmagick \
-  inotify-tools \
-  && apt-get clean
+
+RUN apk update && \
+  apk add curl zsh git graphicsmagick && \
+  rm -rf /opt/yarn* /var/cache/apk/*
+
 CMD ["npm", "start"]
