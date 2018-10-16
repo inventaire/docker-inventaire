@@ -12,7 +12,6 @@ services:
     environment:
       NODE_ENV: "tests"
       NODE_APP_INSTANCE: "tests-alt"
-    working_dir: /opt/inventaire
   entities-search-engine:
     environment:
       NODE_ENV: "tests"

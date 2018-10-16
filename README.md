@@ -45,10 +45,12 @@ Check out [official doc](https://docs.docker.com/compose/)
 
 ## Load wikidata into elasticsearch
 
-Make sure ES import limit is above entities-search-engige import rate, by raising the limit
+Make sure ES import limit is above entities-search-engige import rate, by [closing the index](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html) first, raising the limit & reopen the index
 
 ```
-docker-compose exec entities-search-engine curl -XPUT http://elasticsearch:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
+curl -XPOST http://localhost:9200/wikidata/_close
+curl -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
+curl -XPOST http://localhost:9200/wikidata/_open
 ```
 
 start the containers `docker-compose up`
