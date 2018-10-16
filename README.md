@@ -21,6 +21,9 @@ clone the two repos inventaire needs to run :
 ```
 git clone https://github.com/inventaire/inventaire.git
 git clone https://github.com/inventaire/entities-search-engine.git
+# Install NodeJS dependencies
+./scripts/docker_npm inventaire install
+./scripts/docker_npm entities-search-engine install
 ```
 
 Create empty folders for docker volume to dump backup. In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`

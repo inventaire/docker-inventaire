@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -eu
+
+path=$1
+cwd=$(realpath $path)
+dir=$(dirname $cwd)
+workdir="/opt/${dir}"
+uid=$(stat -c '%u' $cwd)
+
+# All args but the first one
+npm_args="${@:2}"
+
+docker run --user $uid --rm --volume "${cwd}:/${workdir}" --workdir $workdir node:8 npm --color=always $npm_args
