@@ -9,4 +9,4 @@ RUN apt-get update \
 # - allows to handle leveldb with level-party from both the host and container at the same time
 USER 1000:1000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "watch"]
