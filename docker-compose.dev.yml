@@ -1,0 +1,57 @@
+version: '3'
+services:
+  couchdb:
+    image: couchdb:1.7.2
+    network_mode: host
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: "$COUCHDB_USER"
+      COUCHDB_PASSWORD: "$COUCHDB_PASSWORD"
+    volumes:
+      - './data/couchdb:/usr/local/var/lib/couchdb'
+  inventaire:
+    build:
+      context: ./inventaire
+      dockerfile: /home/maxlath/code/inventaire/docker-inventaire/Dockerfile.inventaire
+    command: 'npm run watch'
+    network_mode: host
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./inventaire:/opt/inventaire
+      - ../inventaire-i18n:/opt/inventaire/inventaire-i18n
+      - ../inventaire-i18n/dist/client:/opt/inventaire/client/public/i18n/dist
+      # Create this directory before starting Docker, otherwise the permission will be set
+      # to root:root, returning EACCES errors when trying to write files in it
+      - /tmp/nodemailer-preview:/tmp/nodemailer-preview
+    working_dir: /opt/inventaire
+    environment:
+      - FORCE_COLOR=true
+    depends_on:
+      - couchdb
+      - elasticsearch
+      - entities-search-engine
+  elasticsearch:
+    image: elasticsearch:2.4
+    # environment:
+    #   - 'http.host=0.0.0.0'
+    #   - 'transport.host=127.0.0.1'
+    network_mode: host
+    ports :
+      - '9200:9200'
+    volumes:
+      - './data/elasticsearch:/usr/share/elasticsearch/data'
+  entities-search-engine:
+    image: node:8
+    command: 'npm run watch'
+    network_mode: host
+    ports:
+      - "3213:3213"
+    environment:
+      - FORCE_COLOR=true
+    volumes:
+      - ./entities-search-engine:/opt/entities-search-engine
+    working_dir: /opt/entities-search-engine
+    depends_on:
+      - elasticsearch
