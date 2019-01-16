@@ -16,6 +16,7 @@ services:
       dockerfile: Dockerfile.inventaire
     ports:
       - "3006:3006"
+      - "9485:9485"
     volumes:
       - ./inventaire:/opt/inventaire
     working_dir: /opt/inventaire
