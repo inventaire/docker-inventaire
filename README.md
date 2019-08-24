@@ -23,12 +23,30 @@ git clone https://github.com/inventaire/inventaire.git
 git clone https://github.com/inventaire/entities-search-engine.git
 ```
 
-Create empty folders for docker volume to dump backup. In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`
 
-Start the magic, build everything at once !
+Create empty folders for docker volumes to set themselves. 
+In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`
+
+Start the magic, build everything !
 
 ```
-docker-compose up --build
+docker-compose build
+```
+
+Then download de Node dependencies, thanks to the magnificient `npm`:
+
+```
+sudo docker run --user 1000 --rm --volume "$(pwd):/opt/" --workdir '/opt/inventaire' node:8 npm install
+```
+This command run also the postinstall script which install the client
+
+Install also the translation dependencies of
+[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
+
+Finally, start the build with
+
+```
+docker-compose up
 ```
 
 ## Useful commands
