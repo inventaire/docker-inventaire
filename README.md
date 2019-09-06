@@ -7,7 +7,7 @@ Run your own inventaire in a docker environment
 
 ## Install
 
-```
+```bash
 git clone https://github.com/inventaire/inventaire-docker.git
 ```
 
@@ -18,7 +18,7 @@ clone the two repos inventaire needs to run :
  - `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
  - `entities-search-engine` for querying entities -> [go to repo](https://github.com/inventaire/entities-search-engine)
 
-```
+```bash
 git clone https://github.com/inventaire/inventaire.git
 git clone https://github.com/inventaire/entities-search-engine.git
 ```
@@ -29,14 +29,24 @@ In accordance with docker-compose volumes, example: `mkdir data couch-test couch
 
 Start the magic, build everything !
 
-```
+```bash
 docker-compose build
 ```
 
 Then download de Node dependencies, thanks to the magnificient `npm`:
 
+```bash
+docker-compose run --rm inventaire npm install
+docker-compose run --rm entities-search-engine npm install
 ```
-sudo docker run --user 1000 --rm --volume "$(pwd):/opt/" --workdir '/opt/inventaire' node:8 npm install
+
+Configure inventaire so that it can connect to CouchDB:
+```bash
+echo "module.exports =
+  db:
+    username: 'couchdb'
+    password: 'password'
+" > ./inventaire/config/local.coffee
 ```
 This command run also the postinstall script which install the client
 
@@ -46,7 +56,7 @@ Install also the translation dependencies of
 Finally, start the build with
 
 ```
-docker-compose up
+docker-compose up -d
 ```
 
 ## Useful commands
@@ -89,7 +99,7 @@ In case you would like to play with out-of-the-box data.
 
 Run api tests to populate tests dbs (see Tests section)
 ```
-docker-compose -f docker-compose.yml -f docker-compose.test.yml up exec inventaire npm run test-api
+docker-compose -f docker-compose.yml -f docker-compose.test.yml exec inventaire npm run test-api
 ```
 
 - Replicate `*-tests` dbs documents into `*` dbs
