@@ -31,7 +31,6 @@ services:
     ports :
       - '127.0.0.1:9200:9200'
     volumes:
-      # backup folder when ES container is removed
       - './data/es:/usr/share/elasticsearch/data'
     network_mode: host
     logging:
@@ -40,7 +39,7 @@ services:
     build:
       context: ./.
       dockerfile: Dockerfile.entities-search-engine
-    command: 'node_modules/coffee-script/bin/coffee server/server.coffee'
+    command: 'node server/server.js'
     ports:
       - "3213:3213"
     volumes:

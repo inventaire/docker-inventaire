@@ -1,4 +1,4 @@
-# Use with `docker-compose.yml`. Use the -f option
+# Override `docker-compose.yml`. Use the -f option
 # to specify the list of files. Compose merges files in the
 # order they’re specified on the command line.
 # See https://docs.docker.com/compose/extends
@@ -6,7 +6,6 @@ version: '3'
 services:
   couch:
     volumes:
-      # backup folder when container is removed
       - './data/couch-test:/usr/local/var/lib/couchdb'
   inventaire:
     ports: [ "3009:3009" ]
