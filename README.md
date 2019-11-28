@@ -81,17 +81,15 @@ curl -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fi
 curl -XPOST http://localhost:9200/wikidata/_open
 ```
 
-start the containers `docker-compose up`
+Make sure to have containers running then :
 
 ```
-claim=P31:Q5
-type=humans
-docker-compose exec entities-search-engine ./bin/dump_wikidata_subset $claim $type
+docker-compose exec entities-search-engine ./bin/dump_wikidata_subset P31:Q5 humans
 ```
 
-[more info on importing some wikidata items](https://github.com/inventaire/inventaire-deploy/install_entities_search_engine)
+[More info on importing some wikidata items](https://github.com/inventaire/inventaire-deploy/install_entities_search_engine)
 
-more docs [wikidata filtered dump import](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.mdFv)
+More docs [wikidata filtered dump import](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.mdFv)
 
 ## Fixtures
 
