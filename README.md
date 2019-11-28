@@ -59,17 +59,39 @@ Finally, start the build with
 docker-compose up -d
 ```
 
-## Useful commands
+## Create a user admin
 
-`docker-compose up` : start containers if already built
+A user admin is not that useful in development, it only allows you to merge/delete entities, see any user contributions, and a few more things. But if needed, start by signing up a user :
 
-`docker-compose down` : kill active containers
+```bash
+curl http://localhost:3006/api/auth?action=signup -d '{"username": "yourusername", "password": "yourpassword", "email":"some+email@example.org"}'
+```
 
-`docker rm $(docker ps -a -q)` : delete stopped containers
+Grab the new user id
 
-`docker rmi $(docker images -q -f dangling=true)` : delete untagged images
+```bash
+user_id=$(curl --user yourusername:yourpassword  http://localhost:3006/api/user | jq -r '._id')
+```
 
-Check out [official doc](https://docs.docker.com/compose/)
+Then you can either go to CouchDB GUI to manually add the `"admin": true` flag to your user document:
+
+```sh
+firefox "http://localhost:5984/users/${user_id}"
+```
+
+Or use the dedicated script, but you need to modify your local config to override the default `.db.actionsScripts` values:
+
+```coffee
+module.exports =
+  db:
+    actionsScripts:
+      port: 5984
+      suffix: null
+```
+
+```sh
+./scripts/actions/make_user_admin_from_id.coffee $user_id
+```
 
 ## Load wikidata into elasticsearch
 
