@@ -24,7 +24,7 @@ git clone https://github.com/inventaire/entities-search-engine.git
 ```
 
 
-Create empty folders for docker volumes to set themselves. 
+Create empty folders for docker volumes to set themselves.
 In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`
 
 Start the magic, build everything !
@@ -147,3 +147,15 @@ or execute directly the test command
 Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
 
 `sudo ln ~/path/to/inventaire-docker/inventaire /opt -s`
+
+## Troubleshooting
+
+### Elastic `users` and `groups` indexes are not up to date
+
+`couchdb2elastic4sync` is a small libary in charge of maintaining ES indexes up to date with couchdb documents (only for `users` and `groups` since `entities` are handdled by `entities-search-engine`). If `couchdb2elastic4sync` does not find Elasticsearch search. Make sure configs files exists in `inventaire/scripts/couch2elastic4sync/configs`. They should be created during postinstall, but if the folder is empty, run the following scripts to create it :
+
+```
+docker-compose exec inventaire npm run couch2elastic4sync:init
+docker-compose exec inventaire npm run couch2elastic4sync:load
+```
+
