@@ -1,4 +1,5 @@
 Run your own inventaire in a docker environment
+Used only for testing and development purposes, so use in production at your own risk.
 
 ## Requirements
 
