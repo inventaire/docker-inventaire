@@ -1,4 +1,4 @@
-FROM node:8.12.0-jessie
+FROM node:12-buster
 
 RUN apt-get update \
   && apt-get install -y curl zsh git graphicsmagick inotify-tools \
