@@ -42,6 +42,7 @@ docker-compose run --rm entities-search-engine npm install
 ```
 
 Configure inventaire so that it can connect to CouchDB:
+
 ```bash
 echo "module.exports = {
   db: {
@@ -52,12 +53,11 @@ echo "module.exports = {
 " > ./inventaire/config/local.js
 ```
 
-Install also the translation dependencies of
-[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
+You can optionnally install translation dependencies of[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
 
-Finally, start the build with
+## Usage
 
-```
+```bash
 docker-compose up -d
 ```
 
@@ -78,7 +78,7 @@ user_id=$(curl --user yourusername:yourpassword  http://localhost:3006/api/user 
 Then you can either go to CouchDB GUI to manually add the `"admin": true` flag to your user document:
 
 ```sh
-firefox "http://localhost:5984/users/${user_id}"
+firefox "http://localhost:5984/_utils/document.html?users/${user_id}"
 ```
 
 Or use the dedicated script, but you need to modify your local config to override the default `.db.actionsScripts` values:
@@ -108,7 +108,7 @@ curl -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fi
 curl -XPOST http://localhost:9200/wikidata/_open
 ```
 
-Make sure to have containers running then :
+Index all wd items with statement `wdt:P31 wd:Q5` aka all humans :
 
 ```bash
 docker-compose exec entities-search-engine ./bin/dump_wikidata_subset P31:Q5 humans
@@ -117,6 +117,16 @@ docker-compose exec entities-search-engine ./bin/dump_wikidata_subset P31:Q5 hum
 [More info on importing some wikidata items](https://github.com/inventaire/inventaire-deploy/install_entities_search_engine)
 
 More docs [wikidata filtered dump import](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.mdFv)
+
+## Enable inventaire items to be searchable
+
+To index inventaire items created locally, enable updater in `inventaire/config/locale.js`:
+
+```js
+entitiesSearchEngine: {
+  updateEnabled: true
+}
+```
 
 ## Fixtures
 
@@ -164,4 +174,3 @@ Tip : create a symbolic link on your machine between the inventaire folder and d
 docker-compose exec inventaire npm run couch2elastic4sync:init
 docker-compose exec inventaire npm run couch2elastic4sync:load
 ```
-
