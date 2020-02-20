@@ -43,13 +43,14 @@ docker-compose run --rm entities-search-engine npm install
 
 Configure inventaire so that it can connect to CouchDB:
 ```bash
-echo "module.exports =
-  db:
-    username: 'couchdb'
+echo "module.exports = {
+  db: {
+    username: 'couchdb',
     password: 'password'
-" > ./inventaire/config/local.coffee
+  }
+}
+" > ./inventaire/config/local.js
 ```
-This command run also the postinstall script which install the client
 
 Install also the translation dependencies of
 [inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
@@ -82,23 +83,26 @@ firefox "http://localhost:5984/users/${user_id}"
 
 Or use the dedicated script, but you need to modify your local config to override the default `.db.actionsScripts` values:
 
-```coffee
-module.exports =
-  db:
-    actionsScripts:
-      port: 5984
+```js
+module.exports = {
+  db: {
+    actionsScripts: {
+      port: 5984,
       suffix: null
+    }
+  }
+}
 ```
 
 ```sh
 ./scripts/actions/make_user_admin_from_id.coffee $user_id
 ```
 
-## Load wikidata into elasticsearch
+## Load wikidata entities into elasticsearch
 
 Make sure ES import limit is above entities-search-engige import rate, by [closing the index](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html) first, raising the limit & reopen the index
 
-```
+```bash
 curl -XPOST http://localhost:9200/wikidata/_close
 curl -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
 curl -XPOST http://localhost:9200/wikidata/_open
@@ -106,7 +110,7 @@ curl -XPOST http://localhost:9200/wikidata/_open
 
 Make sure to have containers running then :
 
-```
+```bash
 docker-compose exec entities-search-engine ./bin/dump_wikidata_subset P31:Q5 humans
 ```
 
@@ -119,13 +123,14 @@ More docs [wikidata filtered dump import](https://github.com/inventaire/entities
 In case you would like to play with out-of-the-box data.
 
 Run api tests to populate tests dbs (see Tests section)
-```
+
+```bash
 docker-compose -f docker-compose.yml -f docker-compose.test.yml exec inventaire npm run test-api
 ```
 
 - Replicate `*-tests` dbs documents into `*` dbs
 
-```
+```bash
 `docker-compose exec inventaire npm run replicate-tests-db`
 ```
 
@@ -133,7 +138,7 @@ docker-compose -f docker-compose.yml -f docker-compose.test.yml exec inventaire 
 
 Start services with test environnement with [multiple compose files](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files)
 
-```
+```bash
 docker-compose -f docker-compose.yml -f docker-compose.test.yml up
 ```
 
@@ -155,7 +160,7 @@ Tip : create a symbolic link on your machine between the inventaire folder and d
 
 `couchdb2elastic4sync` is a small libary in charge of maintaining ES indexes up to date with couchdb documents (only for `users` and `groups` since `entities` are handdled by `entities-search-engine`). If `couchdb2elastic4sync` does not find Elasticsearch search. Make sure configs files exists in `inventaire/scripts/couch2elastic4sync/configs`. They should be created during postinstall, but if the folder is empty, run the following scripts to create it :
 
-```
+```bash
 docker-compose exec inventaire npm run couch2elastic4sync:init
 docker-compose exec inventaire npm run couch2elastic4sync:load
 ```
