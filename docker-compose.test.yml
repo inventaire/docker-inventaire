@@ -10,8 +10,7 @@ services:
   inventaire:
     ports: [ "3009:3009" ]
     environment:
-      NODE_ENV: "tests"
-      NODE_APP_INSTANCE: "tests-alt"
+      NODE_ENV: "tests-api"
   entities-search-engine:
     ports: [ "3214:3214" ]
     environment:
