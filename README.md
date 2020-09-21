@@ -100,7 +100,7 @@ module.exports = {
 
 ## Load wikidata entities into elasticsearch
 
-Make sure ES import limit is above entities-search-engige import rate, by [closing the index](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html) first, raising the limit & reopen the index
+It's possible that elasticsearch import limit is below the entities-search-engige import rate
 
 ```bash
 curl -XPOST http://localhost:9200/wikidata/_close
@@ -163,6 +163,11 @@ or execute directly the test command
 Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
 
 `sudo ln ~/path/to/inventaire-docker/inventaire /opt -s`
+
+Alternatively, as root in inventaire container: 
+
+`# mkdir /supervisor/path/to/inventaire`
+`# ln -s /opt/ /supervisor/path/to/inventaire`
 
 ## Troubleshooting
 
