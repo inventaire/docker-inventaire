@@ -26,7 +26,10 @@ git clone https://github.com/inventaire/entities-search-engine.git
 
 
 Create empty folders for docker volumes to set themselves.
-In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`
+
+In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`.
+
+Ensure the owner ID of those folders is 1000: `chown -R 1000:1000`.
 
 Start the magic, build everything !
 
@@ -104,7 +107,7 @@ It's possible that elasticsearch import limit is below the entities-search-engig
 
 ```bash
 curl -XPOST http://localhost:9200/wikidata/_close
-curl -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
+curl -H 'Content-Type:application/json' -H 'Accept: application/json' -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
 curl -XPOST http://localhost:9200/wikidata/_open
 ```
 
