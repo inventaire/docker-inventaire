@@ -53,6 +53,12 @@ echo "module.exports = {
 
 You can optionnally install translation dependencies of[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
 
+### Troubleshooting
+#### elasticsearch errors
+- `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
+
+See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html)
+
 ## Usage
 
 ```bash
