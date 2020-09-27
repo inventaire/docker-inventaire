@@ -12,7 +12,7 @@ Used only for testing and development purposes, so use in production at your own
 git clone https://github.com/inventaire/inventaire-docker.git
 ```
 
-got to `cd inventaire-docker`
+got to `cd docker-inventaire`
 
 clone `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
 
