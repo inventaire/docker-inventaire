@@ -14,14 +14,10 @@ git clone https://github.com/inventaire/inventaire-docker.git
 
 got to `cd inventaire-docker`
 
-clone the two repos inventaire needs to run :
-
- - `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
- - `entities-search-engine` for querying entities -> [go to repo](https://github.com/inventaire/entities-search-engine)
+clone `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
 
 ```bash
 git clone https://github.com/inventaire/inventaire.git
-git clone https://github.com/inventaire/entities-search-engine.git
 ```
 
 
@@ -37,11 +33,10 @@ Start the magic, build everything !
 docker-compose build
 ```
 
-Then download de Node dependencies, thanks to the magnificient `npm`:
+Download Node dependencies:
 
 ```bash
 docker-compose run --rm inventaire npm install
-docker-compose run --rm entities-search-engine npm install
 ```
 
 Configure inventaire so that it can connect to CouchDB:
@@ -111,26 +106,6 @@ curl -H 'Content-Type:application/json' -H 'Accept: application/json' -XPUT http
 curl -XPOST http://localhost:9200/wikidata/_open
 ```
 
-Index all wd items with statement `wdt:P31 wd:Q5` aka all humans :
-
-```bash
-docker-compose exec entities-search-engine ./bin/dump_wikidata_subset P31:Q5 humans
-```
-
-[More info on importing some wikidata items](https://github.com/inventaire/inventaire-deploy/install_entities_search_engine)
-
-More docs [wikidata filtered dump import](https://github.com/inventaire/entities-search-engine/blob/master/docs/wikidata_filtered_dump_import.mdFv)
-
-## Enable inventaire items to be searchable
-
-To index inventaire items created locally, enable updater in `inventaire/config/locale.js`:
-
-```js
-entitiesSearchEngine: {
-  updateEnabled: true
-}
-```
-
 ## Fixtures
 
 In case you would like to play with out-of-the-box data.
@@ -167,7 +142,7 @@ Tip : create a symbolic link on your machine between the inventaire folder and d
 
 `sudo ln ~/path/to/inventaire-docker/inventaire /opt -s`
 
-Alternatively, as root in inventaire container: 
+Alternatively, as root in inventaire container:
 
 `# mkdir /supervisor/path/to/inventaire`
 `# ln -s /opt/ /supervisor/path/to/inventaire`
@@ -176,7 +151,7 @@ Alternatively, as root in inventaire container:
 
 ### Elastic `users` and `groups` indexes are not up to date
 
-`couchdb2elastic4sync` is a small libary in charge of maintaining ES indexes up to date with couchdb documents (only for `users` and `groups` since `entities` are handdled by `entities-search-engine`). If `couchdb2elastic4sync` does not find Elasticsearch search. Make sure configs files exists in `inventaire/scripts/couch2elastic4sync/configs`. They should be created during postinstall, but if the folder is empty, run the following scripts to create it :
+`couchdb2elastic4sync` is a small libary in charge of maintaining ES indexes up to date with couchdb documents. If `couchdb2elastic4sync` does not find Elasticsearch search. Make sure configs files exists in `inventaire/scripts/couch2elastic4sync/configs`. They should be created during postinstall, but if the folder is empty, run the following scripts to create it :
 
 ```bash
 docker-compose exec inventaire npm run couch2elastic4sync:init
