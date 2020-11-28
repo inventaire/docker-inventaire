@@ -1,6 +1,0 @@
-FROM node:8-alpine
-
-RUN apk add --no-cache curl 
-
-CMD [ "node_modules/coffee-script/bin/coffee", "server/server.coffee"]
-

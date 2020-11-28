@@ -35,17 +35,3 @@ services:
     network_mode: host
     logging:
       driver: none
-  entities-search-engine:
-    build:
-      context: ./.
-      dockerfile: Dockerfile.entities-search-engine
-    command: 'node server/server.js'
-    ports:
-      - "3213:3213"
-    volumes:
-      - ./entities-search-engine:/opt/entities-search-engine
-    working_dir: /opt/entities-search-engine
-    network_mode: host
-    logging:
-      driver: none
-
