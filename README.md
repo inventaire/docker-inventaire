@@ -98,7 +98,7 @@ module.exports = {
 
 ## Load wikidata entities into elasticsearch
 
-It's possible that elasticsearch import limit is below the entities-search-engige import rate
+Elasticsearch import limit may be below the indexation import rate
 
 ```bash
 curl -XPOST http://localhost:9200/wikidata/_close
