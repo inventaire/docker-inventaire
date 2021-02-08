@@ -20,14 +20,7 @@ clone `inventaire` core application server -> [setup](https://github.com/inventa
 git clone https://github.com/inventaire/inventaire.git
 ```
 
-
-Create empty folders for docker volumes to set themselves.
-
-In accordance with docker-compose volumes, example: `mkdir data couch-test couch es`.
-
-Ensure the owner ID of those folders is 1000: `chown -R 1000:1000`.
-
-Start the magic, build everything !
+Build
 
 ```bash
 docker-compose build

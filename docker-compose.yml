@@ -8,7 +8,7 @@ services:
       COUCHDB_USER: "couchdb"
       COUCHDB_PASSWORD: "password"
     volumes:
-      - './data/couch:/usr/local/var/lib/couchdb'
+      - 'couchdb:/usr/local/var/lib/couchdb'
     network_mode: host
     tty: true
   inventaire:
@@ -33,7 +33,10 @@ services:
     ports :
       - '127.0.0.1:9200:9200'
     volumes:
-      - './data/es:/usr/share/elasticsearch/data'
+      - 'elasticsearch:/usr/share/elasticsearch/data'
     network_mode: host
     logging:
       driver: none
+volumes:
+  couchdb:
+  elasticsearch:
