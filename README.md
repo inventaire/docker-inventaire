@@ -9,7 +9,7 @@ Used only for testing and development purposes, so use in production at your own
 ## Install
 
 ```bash
-git clone https://github.com/inventaire/inventaire-docker.git
+git clone https://github.com/inventaire/docker-inventaire.git
 ```
 
 got to `cd docker-inventaire`
@@ -46,11 +46,30 @@ echo "module.exports = {
 
 You can optionnally install translation dependencies of[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
 
-### Troubleshooting
-#### elasticsearch errors
-- `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
+### Rootless Docker
 
-See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html)
+Docker Engine v20.10 is now available in rootless mode. If you would like to try it, you may follow the [official guide](https://docs.docker.com/engine/security/rootless/) (including command `export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock`).
+
+Start the inventaire install steps above, before installing dependencies, make sure that the owner of inventaire folder is the same as the owner inside the container.
+
+Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.js` in consequence:
+
+```
+module.exports = {
+  protocol: 'http',
+  port: 3006,
+  host: 'inventaire',
+  db: {
+    username: 'couchdb',
+    password: 'password',
+    protocol: 'http',
+    hostname: 'couch'
+  },
+  elasticsearch: {
+    host:'http://elasticsearch:9200'
+  }
+}
+```
 
 ## Usage
 
@@ -156,3 +175,13 @@ Alternatively, as root in inventaire container:
 docker-compose exec inventaire npm run couch2elastic4sync:init
 docker-compose exec inventaire npm run couch2elastic4sync:load
 ```
+
+### Elasticsearch errors
+- `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
+
+See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html)
+
+### Quieting couchdb notice
+couchdb may warn constantly that `_users` database does not exist, [as documented](https://docs.couchdb.org/en/latest/setup/single-node.html), you can create de database with:
+
+`curl -X PUT http://127.0.0.1:5984/_users`
