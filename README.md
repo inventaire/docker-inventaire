@@ -167,15 +167,6 @@ Alternatively, as root in inventaire container:
 
 ## Troubleshooting
 
-### Elastic `users` and `groups` indexes are not up to date
-
-`couchdb2elastic4sync` is a small libary in charge of maintaining ES indexes up to date with couchdb documents. If `couchdb2elastic4sync` does not find Elasticsearch search. Make sure configs files exists in `inventaire/scripts/couch2elastic4sync/configs`. They should be created during postinstall, but if the folder is empty, run the following scripts to create it :
-
-```bash
-docker-compose exec inventaire npm run couch2elastic4sync:init
-docker-compose exec inventaire npm run couch2elastic4sync:load
-```
-
 ### Elasticsearch errors
 - `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
 
