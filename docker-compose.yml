@@ -24,11 +24,11 @@ services:
     network_mode: host
     tty: true
   elasticsearch:
-    image: elasticsearch:7.9.1
+    image: elasticsearch:7.14.0
     environment:
       - 'http.host=0.0.0.0'
       - 'transport.host=127.0.0.1'
-      # See https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html
+      # See https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docker.html
       - 'discovery.type=single-node'
     ports :
       - '127.0.0.1:9200:9200'
