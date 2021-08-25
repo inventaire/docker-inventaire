@@ -4,9 +4,9 @@
 # See https://docs.docker.com/compose/extends
 version: '3'
 services:
-  couch:
+  couchdb:
     volumes:
-      - './data/couch-test:/usr/local/var/lib/couchdb'
+      - './data/couchdb-test:/usr/local/var/lib/couchdb'
   inventaire:
     ports: [ "3009:3009" ]
     environment:
