@@ -1,0 +1,24 @@
+# Running only CouchDB and Elasticsearch in Docker,
+# the rest being run directly on the host machine
+
+version: '3'
+services:
+  couchdb:
+    image: couchdb:3.2.1
+    ports:
+      - "7984:5984"
+    environment:
+      COUCHDB_USER: "$COUCHDB_USER"
+      COUCHDB_PASSWORD: "$COUCHDB_PASSWORD"
+    volumes:
+      - './data/couchdb:/opt/couchdb/data'
+  elasticsearch:
+    image: elasticsearch:7.16.2
+    environment:
+      # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
+      - 'discovery.type=single-node'
+      - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+    ports :
+      - '127.0.0.1:9200:9200'
+    volumes:
+      - './data/elasticsearch:/usr/share/elasticsearch/data'
