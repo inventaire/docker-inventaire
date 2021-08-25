@@ -44,8 +44,6 @@ echo "module.exports = {
 " > ./inventaire/config/local.js
 ```
 
-You can optionnally install translation dependencies of[inventaire-i18n](https://github.com/inventaire/inventaire-i18n/) [need more details]
-
 ### Rootless Docker
 
 Docker Engine v20.10 is now available in rootless mode. If you would like to try it, you may follow the [official guide](https://docs.docker.com/engine/security/rootless/) (including command `export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock`).
