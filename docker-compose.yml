@@ -8,7 +8,7 @@ services:
       COUCHDB_USER: "yourcouchdbusername"
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
-      - 'couchdb:/usr/local/var/lib/couchdb'
+      - 'couchdb:/opt/couchdb/data'
     network_mode: host
     tty: true
   inventaire:
