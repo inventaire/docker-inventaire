@@ -24,7 +24,7 @@ services:
     network_mode: host
     tty: true
   elasticsearch:
-    image: elasticsearch:7.14.0
+    image: elasticsearch:7.16.1
     environment:
       - 'http.host=0.0.0.0'
       - 'transport.host=127.0.0.1'
