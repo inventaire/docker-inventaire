@@ -11,6 +11,8 @@ services:
       - 'couchdb:/opt/couchdb/data'
     network_mode: host
     tty: true
+    logging:
+      driver: none
   inventaire:
     build:
       context: ./.
