@@ -32,7 +32,7 @@ Download Node dependencies:
 docker-compose run --rm inventaire npm install
 ```
 
-Configure inventaire so that it can connect to CouchDB:
+Configure inventaire so that it can connect to CouchDB. For that, create a file `config/local.cjs` with the following command:
 
 ```sh
 echo "module.exports = {
