@@ -41,7 +41,7 @@ echo "module.exports = {
     password: 'password'
   }
 }
-" > ./inventaire/config/local.js
+" > ./inventaire/config/local.cjs
 ```
 
 ### Rootless Docker
