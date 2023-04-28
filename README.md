@@ -154,7 +154,17 @@ mkdir /supervisor/path/to/inventaire
 ln -s /opt/ /supervisor/path/to/inventaire
 ```
 
-## Docker tips
+## Tips
+
+### Push git commits
+
+To keep things simple, this installation steps above clone repositories in https, but if you want to push to a branch with ssh, you will probably need to change the repositories `origin`:
+```sh
+cd inventaire
+git remote set-url origin git@github.com:inventaire/inventaire.git
+cd client
+git remote set-url origin git@github.com:inventaire/inventaire-client.git
+```
 
 ### Rootless Docker
 
