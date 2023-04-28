@@ -10,11 +10,10 @@ Used only for testing and development purposes, so use in production at your own
 
 ```sh
 git clone https://github.com/inventaire/docker-inventaire.git
+cd docker-inventaire
 ```
 
-got to `cd docker-inventaire`
-
-clone `inventaire` core application server -> [setup](https://github.com/inventaire/inventaire#installation)
+Clone `inventaire` core application [server](https://github.com/inventaire/inventaire)
 
 ```sh
 git clone https://github.com/inventaire/inventaire.git
@@ -26,7 +25,7 @@ Build
 docker-compose build
 ```
 
-Download Node dependencies:
+Download Node dependencies and install the [client repository](https://github.com/inventaire/inventaire-client):
 
 ```sh
 docker-compose run --rm inventaire npm install
@@ -48,8 +47,15 @@ NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PAS
 
 ## Usage
 
+Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in development mode (modifications to the server files will reload the server), by default on port 3006
 ```sh
 docker-compose up -d
+```
+
+To also work on the [client](https://github.com/inventaire/inventaire-client), you need to also start the webpack dev server:
+```sh
+cd inventaire/client
+npm run watch
 ```
 
 ## Create a user admin
