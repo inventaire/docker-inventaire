@@ -46,31 +46,6 @@ echo "module.exports = {
 
 NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PASSWORD` environment variables set in `docker-compose.yml`
 
-### Rootless Docker
-
-Docker Engine v20.10 is now available in rootless mode. If you would like to try it, you may follow the [official guide](https://docs.docker.com/engine/security/rootless/) (including command `export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock`).
-
-Start the inventaire install steps above, before installing dependencies, make sure that the owner of inventaire folder is the same as the owner inside the container.
-
-Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.cjs` in consequence:
-
-```js
-module.exports = {
-  protocol: 'http',
-  port: 3006,
-  host: 'inventaire',
-  db: {
-    username: 'couchdb',
-    password: 'password',
-    protocol: 'http',
-    hostname: 'couch'
-  },
-  elasticsearch: {
-    host:'http://elasticsearch:9200'
-  }
-}
-```
-
 ## Usage
 
 ```sh
@@ -171,6 +146,33 @@ Alternatively, as root in inventaire container:
 ```sh
 mkdir /supervisor/path/to/inventaire
 ln -s /opt/ /supervisor/path/to/inventaire
+```
+
+## Docker tips
+
+### Rootless Docker
+
+Docker Engine v20.10 is now available in rootless mode. If you would like to try it, you may follow the [official guide](https://docs.docker.com/engine/security/rootless/) (including command `export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock`).
+
+Start the inventaire install steps above, before installing dependencies, make sure that the owner of inventaire folder is the same as the owner inside the container.
+
+Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.cjs` in consequence:
+
+```js
+module.exports = {
+  protocol: 'http',
+  port: 3006,
+  host: 'inventaire',
+  db: {
+    username: 'couchdb',
+    password: 'password',
+    protocol: 'http',
+    hostname: 'couch'
+  },
+  elasticsearch: {
+    host:'http://elasticsearch:9200'
+  }
+}
 ```
 
 ## Troubleshooting
