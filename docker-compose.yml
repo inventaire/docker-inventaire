@@ -10,8 +10,6 @@ services:
     volumes:
       - './data/couchdb:/opt/couchdb/data'
     tty: true
-    logging:
-      driver: none
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
@@ -24,8 +22,6 @@ services:
       - '127.0.0.1:9200:9200'
     volumes:
       - './data/elasticsearch:/usr/share/elasticsearch/data'
-    logging:
-      driver: none
 volumes:
   couchdb:
   elasticsearch:
