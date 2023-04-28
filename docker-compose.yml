@@ -13,22 +13,6 @@ services:
     tty: true
     logging:
       driver: none
-  inventaire:
-    build:
-      context: ./.
-      dockerfile: Dockerfile.inventaire
-    ports:
-      - "3006:3006"
-      - "9485:9485"
-    volumes:
-      - ./inventaire:/opt/inventaire
-    working_dir: /opt/inventaire
-    network_mode: host
-    tty: true
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
