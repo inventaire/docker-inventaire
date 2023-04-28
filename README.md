@@ -52,7 +52,7 @@ Docker Engine v20.10 is now available in rootless mode. If you would like to try
 
 Start the inventaire install steps above, before installing dependencies, make sure that the owner of inventaire folder is the same as the owner inside the container.
 
-Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.js` in consequence:
+Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.cjs` in consequence:
 
 ```js
 module.exports = {
