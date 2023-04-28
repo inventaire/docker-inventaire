@@ -3,13 +3,12 @@ services:
   couchdb:
     image: couchdb:3.2.1
     ports:
-      - "5984:5984"
+      - "7984:5984"
     environment:
       COUCHDB_USER: "yourcouchdbusername"
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
       - './data/couchdb:/opt/couchdb/data'
-    network_mode: host
     tty: true
     logging:
       driver: none
@@ -25,7 +24,6 @@ services:
       - '127.0.0.1:9200:9200'
     volumes:
       - './data/elasticsearch:/usr/share/elasticsearch/data'
-    network_mode: host
     logging:
       driver: none
 volumes:
