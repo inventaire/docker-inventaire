@@ -11,8 +11,6 @@ services:
       - './data/couchdb:/opt/couchdb/data'
     network_mode: host
     tty: true
-    logging:
-      driver: none
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
@@ -26,8 +24,6 @@ services:
     volumes:
       - './data/elasticsearch:/usr/share/elasticsearch/data'
     network_mode: host
-    logging:
-      driver: none
 volumes:
   couchdb:
   elasticsearch:
