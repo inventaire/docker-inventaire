@@ -49,7 +49,7 @@ NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PAS
 
 Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in development mode (modifications to the server files will reload the server), by default on port 3006
 ```sh
-docker-compose up -d
+docker-compose up
 ```
 
 To also work on the [client](https://github.com/inventaire/inventaire-client), you need to also start the webpack dev server:
@@ -189,6 +189,27 @@ module.exports = {
     host:'http://elasticsearch:9200'
   }
 }
+```
+
+### Run inventaire server and client outside of Docker
+
+It can sometimes be more convenient to keep CouchDB and Elasticsearch in Docker, but to run the Inventaire server and client outside. For this you will need to:
+- comment-out the `inventaire` block in `docker-compose.yml`
+- have [NodeJS](https://nodejs.org/) >= v16 installed on your machine, which should make both `node` and `npm` executables accessible in your terminal
+
+Then you can start CouchDB and Elasticsearch in the background
+```sh
+docker-compose up -d
+```
+Start the Inventaire server in development mode
+```sh
+cd inventaire
+npm run watch
+```
+And in another terminal, start the client Webpack dev server
+```sh
+cd inventaire/client
+npm run watch
 ```
 
 ## Troubleshooting
