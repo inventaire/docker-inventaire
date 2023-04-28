@@ -37,12 +37,14 @@ Configure inventaire so that it can connect to CouchDB. For that, create a file 
 ```sh
 echo "module.exports = {
   db: {
-    username: 'couchdb',
-    password: 'password'
+    username: 'yourcouchdbusername',
+    password: 'yourcouchdbpassword'
   }
 }
 " > ./inventaire/config/local.cjs
 ```
+
+NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PASSWORD` environment variables set in `docker-compose.yml`
 
 ### Rootless Docker
 
