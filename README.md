@@ -1,5 +1,6 @@
-Run your own inventaire in a docker environment
-Used only for testing and development purposes, so use in production at your own risk.
+Run [Inventaire](https://github.com/inventaire/inventaire) in Docker
+
+This repository is meant to support running Inventaire for testing and development. For production, see [inventaire-deploy](https://github.com/inventaire/inventaire-deploy).
 
 ## Requirements
 
