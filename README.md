@@ -2,6 +2,26 @@ Run [Inventaire](https://github.com/inventaire/inventaire) in Docker
 
 This repository is meant to support running Inventaire for testing and development. For production, see [inventaire-deploy](https://github.com/inventaire/inventaire-deploy).
 
+## Summary
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Requirements](#requirements)
+- [Install](#install)
+- [Usage](#usage)
+- [Tips](#tips)
+  - [Fixtures](#fixtures)
+  - [Tests](#tests)
+  - [Push git commits](#push-git-commits)
+  - [Rootless Docker](#rootless-docker)
+  - [Run inventaire server and client outside of Docker](#run-inventaire-server-and-client-outside-of-docker)
+- [Troubleshooting](#troubleshooting)
+  - [Elasticsearch errors](#elasticsearch-errors)
+  - [Quieting CouchDB notice](#quieting-couchdb-notice)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Requirements
 
 - [docker-compose](https://docs.docker.com/compose/gettingstarted/) up and ready
@@ -59,54 +79,11 @@ cd inventaire/client
 npm run watch
 ```
 
-## Create a user admin
+## Tips
 
-A user admin is not that useful in development, it only allows you to merge/delete entities, see any user contributions, and a few more things. But if needed, start by signing up a user :
+General tips on how to run Inventaire can be found in the [server repository docs](https://github.com/inventaire/inventaire/tree/master/docs). Here after are some additional Docker-specific tips.
 
-```sh
-curl http://localhost:3006/api/auth?action=signup -d '{"username": "yourusername", "password": "yourpassword", "email":"some+email@example.org"}'
-```
-
-Grab the new user id
-
-```sh
-user_id=$(curl --user yourusername:yourpassword  http://localhost:3006/api/user | jq -r '._id')
-```
-
-Then you can either go to CouchDB GUI to manually add the `"admin": true` flag to your user document:
-
-```sh
-firefox "http://localhost:5984/_utils/document.html?users/${user_id}"
-```
-
-Or use the dedicated script, but you need to modify your local config to override the default `.db.actionsScripts` values:
-
-```js
-module.exports = {
-  db: {
-    actionsScripts: {
-      port: 5984,
-      suffix: null
-    }
-  }
-}
-```
-
-```sh
-./scripts/actions/make_user_admin_from_id.coffee $user_id
-```
-
-## Load wikidata entities into elasticsearch
-
-Elasticsearch import limit may be below the indexation import rate
-
-```sh
-curl -XPOST http://localhost:9200/wikidata/_close
-curl -H 'Content-Type:application/json' -H 'Accept: application/json' -XPUT http://localhost:9200/wikidata/_settings -d '{"index.mapping.total_fields.limit": 20000}'
-curl -XPOST http://localhost:9200/wikidata/_open
-```
-
-## Fixtures
+### Fixtures
 
 In case you would like to play with out-of-the-box data.
 
@@ -122,7 +99,7 @@ docker-compose -f docker-compose.yml -f docker-compose.test.yml exec inventaire 
 `docker-compose exec inventaire npm run replicate-tests-db`
 ```
 
-## Tests
+### Tests
 
 Start services with test environnement with [multiple compose files](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files)
 
@@ -139,7 +116,7 @@ docker-compose exec inventaire npm run test-api
 or execute directly the test command
 
 ```sh
-docker-compose exec inventaire ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --timeout 20000 /opt/inventaire/path/to/test/file
+docker-compose exec inventaire npm test /opt/inventaire/path/to/test/file
 ```
 
 Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
@@ -154,8 +131,6 @@ Alternatively, as root in inventaire container:
 mkdir /supervisor/path/to/inventaire
 ln -s /opt/ /supervisor/path/to/inventaire
 ```
-
-## Tips
 
 ### Push git commits
 
