@@ -170,18 +170,19 @@ module.exports = {
 ### Run inventaire server and client outside of Docker
 
 It can sometimes be more convenient to keep CouchDB and Elasticsearch in Docker, but to run the Inventaire server and client outside. For this you will need to:
-- comment-out the `inventaire` block in `docker-compose.yml`
 - have [NodeJS](https://nodejs.org/) >= v16 installed on your machine, which should make both `node` and `npm` executables accessible in your terminal
 
 Then you can start CouchDB and Elasticsearch in the background
 ```sh
-docker-compose up -d
+docker-compose up couchdb elasticsearch -d
 ```
+
 Start the Inventaire server in development mode
 ```sh
 cd inventaire
 npm run watch
 ```
+
 And in another terminal, start the client Webpack dev server
 ```sh
 cd inventaire/client
