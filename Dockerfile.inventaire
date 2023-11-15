@@ -1,7 +1,7 @@
 FROM node:16-bullseye
 
 RUN apt-get update \
-  && apt-get install -y curl zsh git graphicsmagick inotify-tools \
+  && apt-get install -y curl zsh git graphicsmagick inotify-tools jq \
   && apt-get clean
 
 # Default to the same user as the host (override from command lin if needed)
