@@ -81,7 +81,7 @@ npm run watch
 
 ## Tips
 
-General tips on how to run Inventaire can be found in the [server repository docs](https://github.com/inventaire/inventaire/tree/master/docs). Here after are some additional Docker-specific tips.
+General tips on how to run Inventaire can be found in the [server repository docs](https://github.com/inventaire/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
 
 ### Fixtures
 
