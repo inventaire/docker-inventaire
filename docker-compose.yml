@@ -9,6 +9,7 @@ services:
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
       - './data/couchdb:/opt/couchdb/data'
+      - './configs:/opt/couchdb/etc/local.d'
     network_mode: host
     tty: true
   elasticsearch:
