@@ -9,7 +9,12 @@ services:
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
       - './configs:/opt/couchdb/etc/local.d'
+      - 'couchdb:/opt/couchdb/data'
+      - './couchdb_debug.ini:/opt/couchdb/etc/local.ini'
+      - './couchdbLog:/var/log/couchdb'
     tty: true
+    #logging:
+    #  driver: none
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
@@ -17,9 +22,16 @@ services:
       - 'transport.host=127.0.0.1'
       # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
       - 'discovery.type=single-node'
-      - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+      - 'ES_JAVA_OPTS=-Xms500m -Xmx500m'
+      - 'ingest.geoip.downloader.enabled=false'
     ports :
-      - '127.0.0.1:9200:9200'
+      - '9200:9200'
+    volumes:
+      - 'elasticsearch:/usr/share/elasticsearch/data'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
 volumes:
   couchdb:
   elasticsearch:
