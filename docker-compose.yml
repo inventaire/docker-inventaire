@@ -10,7 +10,6 @@ services:
     volumes:
       - './data/couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
-    network_mode: host
     tty: true
   elasticsearch:
     image: elasticsearch:7.16.2
@@ -24,7 +23,6 @@ services:
       - '127.0.0.1:9200:9200'
     volumes:
       - './data/elasticsearch:/usr/share/elasticsearch/data'
-    network_mode: host
 volumes:
   couchdb:
   elasticsearch:
