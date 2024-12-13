@@ -9,7 +9,7 @@ services:
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
       - './configs:/opt/couchdb/etc/local.d'
-      - 'couchdb:/opt/couchdb/data'
+      - './data/couchdb:/opt/couchdb/data'
       - './couchdb_debug.ini:/opt/couchdb/etc/local.ini'
       - './couchdbLog:/var/log/couchdb'
     tty: true
