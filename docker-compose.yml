@@ -4,13 +4,12 @@ services:
     build:
       context: ./.
       dockerfile: Dockerfile.inventaire
-    ports:
-      - "3006:3006"
     volumes:
       - ./inventaire:${PROJECT_ROOT}
     working_dir: ${PROJECT_ROOT}
     environment:
       NODE_ENV: 'production'
+      NODE_APP_INSTANCE: 'federated'
       COUCHDB_USER: ${COUCHDB_USER}
       COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
       PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME}
@@ -21,22 +20,22 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    restart: "always"
   couchdb:
     image: couchdb:3.4.2
-    ports:
-      - "5984:5984"
-    volumes:
-      - 'couchdb:/opt/couchdb/data'
-      - './configs:/opt/couchdb/etc/local.d'
     environment:
       COUCHDB_USER: ${COUCHDB_USER}
       COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+    volumes:
+      - 'couchdb:/opt/couchdb/data'
+      - './configs:/opt/couchdb/etc/local.d'
     tty: true
+    restart: "always"
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
-      - 'http.host=0.0.0.0'
-      - 'transport.host=127.0.0.1'
+      - 'http.host=elasticsearch'
+      - 'transport.host=elasticsearch'
       # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
       - 'discovery.type=single-node'
       # Limit memory usage to 1Go,
@@ -44,8 +43,38 @@ services:
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
-    ports :
-      - '9200:9200'
+    restart: "always"
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+     - "80:80"
+     - "443:443"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates/
+      - ./nginx/snippets:/etc/nginx/snippets
+      - ./inventaire:${PROJECT_ROOT}
+      - certbot-www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    environment:
+      PROJECT_ROOT: ${PROJECT_ROOT}
+      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME}
+      INVENTAIRE_PORT: ${INVENTAIRE_PORT}
+    depends_on:
+      - inventaire
+    restart: "always"
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    restart: unless-stopped
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;"
+    depends_on:
+      - nginx
+
 volumes:
   couchdb:
   elasticsearch:
+  certbot-www:
