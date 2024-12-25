@@ -1,0 +1,6 @@
+PROJECT_ROOT=/opt/inventaire
+DOMAIN_NAME=an-inventaire-site.org
+COUCHDB_USER=couchdb
+# Consider passwords with no less than 32 charracters, i.e.:
+#   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32 > /secrets/secret_key
+COUCHDB_PASSWORD=your_password

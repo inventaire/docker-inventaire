@@ -34,6 +34,13 @@ git clone https://github.com/inventaire/docker-inventaire.git
 cd docker-inventaire
 ```
 
+Rename `dotenv` file to `.env`, and customize the variables (mainly adding the domain name, and a couchdb password):
+
+```sh
+cp dotenv .env
+vim .env
+```
+
 Clone `inventaire` core application [server](https://github.com/inventaire/inventaire)
 
 ```sh
@@ -49,7 +56,9 @@ docker-compose build
 Download Node dependencies and install the [client repository](https://github.com/inventaire/inventaire-client):
 
 ```sh
-docker-compose run --rm inventaire npm install
+cd inventaire
+npm install tsx && npm install
+cd ..
 ```
 
 Configure inventaire so that it can connect to CouchDB. For that, create a file `config/local.cjs` with the following command:
@@ -57,26 +66,23 @@ Configure inventaire so that it can connect to CouchDB. For that, create a file 
 ```sh
 echo "module.exports = {
   db: {
-    username: 'yourcouchdbusername',
-    password: 'yourcouchdbpassword'
-  }
+    hostname: 'couchdb',
+    username: '$(grep 'COUCHDB_USER' .env | sed -E 's/.*=//')',
+    password: '$(grep 'COUCHDB_PASSWORD' .env | sed -E 's/.*=//')'
+  },
+  elasticsearch: {
+    origin: 'http://elasticsearch:9200',
+  },
+  publicHostname: '$(grep 'DOMAIN_NAME' .env | sed -E 's/.*=//')',
 }
-" > ./inventaire/config/local.cjs
+" > ./inventaire/config/local-production.cjs
 ```
-
-NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PASSWORD` environment variables set in `docker-compose.yml`
 
 ## Usage
 
-Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in development mode (modifications to the server files will reload the server), by default on port 3006
+Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in production mode
 ```sh
 docker-compose up
-```
-
-To also work on the [client](https://github.com/inventaire/inventaire-client), you need to also start the webpack dev server:
-```sh
-cd inventaire/client
-npm run watch
 ```
 
 ## Tips
