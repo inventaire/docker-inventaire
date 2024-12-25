@@ -2,9 +2,16 @@ services:
   inventaire:
     image: inventaire/inventaire:latest
     env_file: .env
+    # You may also build image from sources with:
+    # build:
+      # context: ./inventaire
+      # dockerfile: Dockerfile.inventaire
     depends_on:
       - couchdb
       - elasticsearch
+    # Uncomment if you want to access the code:
+    # volumes:
+    #   - ./inventaire/server:${PROJECT_ROOT}
     tty: true
     logging:
       options:
