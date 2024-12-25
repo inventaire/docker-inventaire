@@ -8,6 +8,7 @@ services:
       COUCHDB_USER: "yourcouchdbusername"
       COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
+      - 'couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
     tty: true
   elasticsearch:
@@ -18,6 +19,8 @@ services:
       # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
       - 'discovery.type=single-node'
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+    volumes:
+      - 'elasticsearch:/usr/share/elasticsearch/data'
     ports :
       - '127.0.0.1:9200:9200'
 volumes:
