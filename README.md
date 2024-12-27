@@ -78,6 +78,14 @@ echo "module.exports = {
 " > ./inventaire/config/local-production.cjs
 ```
 
+## Webserver
+
+Generate the first SSL certificate with Let's Encrypt
+
+```sh
+sudo docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsencrypt" certbot/certbot certonly --standalone
+```
+
 ## Usage
 
 Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in production mode

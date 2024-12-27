@@ -4,25 +4,22 @@ services:
     build:
       context: ./.
       dockerfile: Dockerfile.inventaire
-    ports:
-      - "3006:3006"
     volumes:
       - ./inventaire:${PROJECT_ROOT}
+      - client-build:${PROJECT_ROOT}/inventaire/client/public
     working_dir: ${PROJECT_ROOT}
     environment:
       - 'NODE_ENV=production'
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
     tty: true
     logging:
       options:
         max-size: "10m"
         max-file: "3"
+    restart: "always"
   couchdb:
     image: couchdb:3.4.2
-    ports:
-      - "5984:5984"
     environment:
       COUCHDB_USER: ${COUCHDB_USER}
       COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
@@ -30,6 +27,7 @@ services:
       - 'couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
     tty: true
+    restart: "always"
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
@@ -42,32 +40,38 @@ services:
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
-    ports :
-      - '9200:9200'
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
-      interval: 20s
-      retries: 5
-      start_period: 40s
-  nginx:
+    restart: "always"
+  webserver:
     build:
       context: ./nginx
       dockerfile: Dockerfile.nginx
-    volumes:
-      - ./nginx/snippets:/etc/nginx/snippets
-      - ./nginx/templates:/etc/nginx/templates
-      - ./certbot/www/:/var/www/certbot/:ro
     ports:
-      - "80:80"
-      - "443:443"
+     - "80:80"
+     - "443:443"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates/
+      - ./nginx/snippets:/etc/nginx/snippets
+      - client-build:${PROJECT_ROOT}/inventaire/client/public:ro
+      - certbot-www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
     environment:
-      - PROJECT_ROOT=${PROJECT_ROOT}
-      - DOMAIN_NAME=${DOMAIN_NAME}
+      PROJECT_ROOT: ${PROJECT_ROOT}
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    depends_on:
+      - inventaire
+    restart: "always"
   certbot:
     image: certbot/certbot:latest
     volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+      - ./certbot/conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    restart: unless-stopped
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;"
+    depends_on:
+      - webserver
+
 volumes:
   couchdb:
   elasticsearch:
+  certbot-www:
+  client-build:

@@ -23,7 +23,7 @@ server {
     }
 
     location / {
-        return 301 https://$host$request_uri;
+        return 301 https://\$host$request_uri;
     }
 }
 
@@ -32,8 +32,8 @@ server {
     listen [::]:443 ssl http2;
     server_name ${DOMAIN_NAME};
 
-    ssl_certificate /etc/nginx/ssl/live/${DOMAIN_NAME}/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/live/${DOMAIN_NAME}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem;
 
     include /etc/nginx/snippets/ssl.conf;
 
@@ -86,6 +86,18 @@ server {
        limit_except GET {
            deny  all;
        }
+    }
+
+    location @invimg {
+      include /etc/nginx/snippets/security_headers.conf;
+      default_type "image/jpeg";
+      add_header X-File-Cache "miss";
+      add_header Content-Security-Policy "sandbox";
+      proxy_temp_path      /tmp/nginx/tmp;
+      proxy_store          /tmp/nginx/resize/$uri;
+      proxy_store_access   user:rw  group:rw  all:r;
+      proxy_http_version 1.1;
+      proxy_pass http://inventaire;
     }
 
     # following aliases made in order to respect the url structure
@@ -166,9 +178,9 @@ server {
         deny all;
     }
 
-    # Required to be able to run `certbot -w /var/www/html/`
-    location /.well-known/ {
-        include /etc/nginx/snippets/security_headers.conf;
-        root /var/www/html/;
+    location ^~ '/.well-known/acme-challenge' {
+      include /etc/nginx/snippets/security_headers.conf;
+      default_type "text/plain";
+      root /var/www/certbot;
     }
 }
