@@ -1,15 +1,36 @@
 version: '3'
 services:
+  inventaire:
+    build:
+      context: ./.
+      dockerfile: Dockerfile.inventaire
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./inventaire:${PROJECT_ROOT}
+    working_dir: ${PROJECT_ROOT}
+    environment:
+      NODE_ENV: 'production'
+      COUCHDB_USER: ${COUCHDB_USER}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME}
+    depends_on:
+      - elasticsearch
+    tty: true
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
   couchdb:
     image: couchdb:3.4.2
     ports:
       - "5984:5984"
-    environment:
-      COUCHDB_USER: "yourcouchdbusername"
-      COUCHDB_PASSWORD: "yourcouchdbpassword"
     volumes:
       - 'couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
     tty: true
   elasticsearch:
     image: elasticsearch:7.16.2
@@ -18,11 +39,13 @@ services:
       - 'transport.host=127.0.0.1'
       # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
       - 'discovery.type=single-node'
+      # Limit memory usage to 1Go,
+      # See https://www.elastic.co/guide/en/elasticsearch/reference/current/advanced-configuration.html
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
     ports :
-      - '127.0.0.1:9200:9200'
+      - '9200:9200'
 volumes:
   couchdb:
   elasticsearch:

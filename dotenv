@@ -1,0 +1,12 @@
+# Your website domain name
+PUBLIC_HOSTNAME=an-inventaire-site.org
+
+# Root path within docker container
+PROJECT_ROOT=/opt/inventaire
+
+# Generic user, to modify only for good reason
+COUCHDB_USER=couchdb
+
+# Consider passwords with no less than 32 charracters, for example:
+#   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32
+COUCHDB_PASSWORD=your_password
