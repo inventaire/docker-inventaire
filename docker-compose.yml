@@ -1,31 +1,23 @@
-version: '3'
 services:
   inventaire:
-    build:
-      context: ./.
-      dockerfile: Dockerfile.inventaire
+    image: inventaire:latest
     volumes:
-      - ./inventaire:${PROJECT_ROOT}
-    working_dir: ${PROJECT_ROOT}
-    environment:
-      NODE_ENV: 'production'
-      NODE_APP_INSTANCE: 'federated'
-      COUCHDB_USER: ${COUCHDB_USER}
-      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
-      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME}
+      - ./inventaire:/opt/inventaire
+    env_file: .env
     depends_on:
+      - couchdb
       - elasticsearch
     tty: true
     logging:
       options:
         max-size: "10m"
         max-file: "3"
-    restart: "always"
+    restart: unless-stopped
   couchdb:
-    image: couchdb:3.4.2
-    environment:
-      COUCHDB_USER: ${COUCHDB_USER}
-      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+    build:
+      context: ./couchdb
+      dockerfile: Dockerfile.couchdb
+    env_file: .env
     # Uncomment ports to get access to the db
     # ie. for database transformation, querying, UI access (http://localhost:5984/_utils/)
     # ports:
@@ -34,7 +26,7 @@ services:
       - 'couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
     tty: true
-    restart: "always"
+    restart: unless-stopped
   elasticsearch:
     image: elasticsearch:7.16.2
     environment:
@@ -47,7 +39,7 @@ services:
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
-    restart: "always"
+    restart: unless-stopped
   nginx:
     build:
       context: ./nginx
@@ -61,13 +53,11 @@ services:
       - ./inventaire:${PROJECT_ROOT}
       - certbot-www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
-    environment:
-      PROJECT_ROOT: ${PROJECT_ROOT}
-      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME}
-      INVENTAIRE_PORT: ${INVENTAIRE_PORT}
+    env_file: .env
     depends_on:
+      # Required to be able to define the `inventaire` host as an upstream
       - inventaire
-    restart: "always"
+    restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
     volumes:
