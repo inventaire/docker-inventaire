@@ -1,0 +1,14 @@
+FROM couchdb:3.4.2
+
+COPY docker-custom-entrypoint.sh /usr/local/bin/docker-custom-entrypoint.sh
+COPY init_users_db.sh /usr/local/bin/init_users_db.sh
+
+ENTRYPOINT ["tini", "--", "/usr/local/bin/docker-custom-entrypoint.sh"]
+
+EXPOSE 5984
+
+# Copied from the couchdb image Dockerfile
+# https://github.com/apache/couchdb-docker/blob/734c61f/3.4.2/Dockerfile#L104
+# as it would have been otherwise reset to an empty string
+# See https://docs.docker.com/reference/dockerfile/#understand-how-cmd-and-entrypoint-interact
+CMD ["/opt/couchdb/bin/couchdb"]

@@ -10,3 +10,8 @@ COUCHDB_USER=couchdb
 # Consider passwords with no less than 32 charracters, for example:
 #   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32
 COUCHDB_PASSWORD=your_password
+
+NODE_ENV=production
+NODE_APP_INSTANCE=federated
+# Matching the port defined in inventaire/config/production-federated.cjs
+INVENTAIRE_PORT=3016
