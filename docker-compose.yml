@@ -25,7 +25,7 @@ services:
     tty: true
     restart: unless-stopped
   elasticsearch:
-    image: elasticsearch:7.16.2
+    image: elasticsearch:7.17.28
     environment:
       - 'http.host=elasticsearch'
       - 'transport.host=elasticsearch'
