@@ -26,6 +26,10 @@ services:
     environment:
       COUCHDB_USER: ${COUCHDB_USER}
       COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+    # Uncomment ports to get access to the db
+    # ie. for database transformation, querying, UI access (http://localhost:5984/_utils/)
+    # ports:
+    #   - "5984:5984"
     volumes:
       - 'couchdb:/opt/couchdb/data'
       - './configs:/opt/couchdb/etc/local.d'
