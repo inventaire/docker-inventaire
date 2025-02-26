@@ -18,6 +18,7 @@ WORKDIR /opt/inventaire
 RUN git clone http://github.com/inventaire/inventaire --depth 1 . \
   && mkdir -p /opt/inventaire/client \
   && npm ci --omit=dev \
+  && npm run build \
   && git clone https://github.com/inventaire/inventaire-client.git ./client --branch docker --depth 1 \
   && mkdir -p /opt/inventaire/client/public/sitemaps
 
@@ -31,4 +32,6 @@ RUN npm ci \
 
 WORKDIR /opt/inventaire
 
-CMD [ "npm", "start" ]
+# Avoid using npm script to start the server
+# See https://adambrodziak.pl/dockerfile-good-practices-for-node-and-npm#heading-use-node-not-npm-to-start-the-server
+CMD [ "./scripts/typescript/start_built_server.sh" ]
