@@ -1,12 +1,34 @@
-FROM node:20
+FROM node:20-slim
 
 RUN apt-get update \
-  && apt-get install -y curl zsh git graphicsmagick inotify-tools jq \
-  && apt-get clean
+  && apt-get install -y curl git graphicsmagick inotify-tools jq \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /opt/inventaire \
+  && chown -R 1000:1000 /opt
 
-# Default to the same user as the host (override from command lin if needed)
+# Default to the same user as the host (override from command line if needed)
 # Known benefits:
 # - allows to handle leveldb with level-party from both the host and container at the same time
 USER 1000:1000
 
-CMD ["npm", "run", "start"]
+WORKDIR /opt/inventaire
+
+# - Create the client folder to prevent the server postinstall to run `npm run install-client` as it does it with the wrong workdir and env
+# - Create the public/sitemaps folder to prevent the client postinstall to run `npm run generate-sitemaps` (which needs to be updated to support non-inventaire.io instances)
+RUN git clone http://github.com/inventaire/inventaire --depth 1 . \
+  && mkdir -p /opt/inventaire/client \
+  && npm ci --omit=dev \
+  && git clone https://github.com/inventaire/inventaire-client.git ./client --branch docker --depth 1 \
+  && mkdir -p /opt/inventaire/client/public/sitemaps
+
+WORKDIR /opt/inventaire/client
+
+# Include dev dependencies (webpack, svelte-checks) at first to be able to build during the postinstall script
+RUN npm ci \
+  && rm -rf node_modules \
+  && npm ci --omit=dev --ignore-scripts \
+  && npm cache clean --force
+
+WORKDIR /opt/inventaire
+
+CMD [ "npm", "start" ]
