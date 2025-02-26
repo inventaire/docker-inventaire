@@ -6,12 +6,21 @@ PROJECT_ROOT=/opt/inventaire
 
 # Generic user, to modify only for good reason
 COUCHDB_USER=couchdb
-
 # Consider passwords with no less than 32 charracters, for example:
 #   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32
 COUCHDB_PASSWORD=your_password
 
 NODE_ENV=production
 NODE_APP_INSTANCE=federated
-# Matching the port defined in inventaire/config/production-federated.cjs
+
+# Conventional port for Inventaire server in federated mode
 INVENTAIRE_PORT=3016
+
+INSTANCE_NAME='My Inventaire Instance'
+
+# Will be displayed on landing screen
+ORG_NAME='Example Organization'
+ORG_URL='https://inventaire.example.org'
+
+# Users receiving emails from the instance can reply to this
+CONTACT_ADDRESS='contact@inventaire.example.org'
