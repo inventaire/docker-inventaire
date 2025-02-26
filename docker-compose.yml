@@ -1,8 +1,6 @@
 services:
   inventaire:
-    image: inventaire:latest
-    volumes:
-      - ./inventaire:/opt/inventaire
+    image: inventaire/inventaire:latest
     env_file: .env
     depends_on:
       - couchdb

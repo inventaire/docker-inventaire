@@ -32,6 +32,8 @@ RUN npm ci \
 
 WORKDIR /opt/inventaire
 
+COPY docker-entrypoint.sh docker-entrypoint.sh
+
 # Avoid using npm script to start the server
 # See https://adambrodziak.pl/dockerfile-good-practices-for-node-and-npm#heading-use-node-not-npm-to-start-the-server
-CMD [ "./scripts/typescript/start_built_server.sh" ]
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
