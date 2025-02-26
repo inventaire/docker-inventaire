@@ -1,8 +1,18 @@
-Run [Inventaire](https://github.com/inventaire/inventaire) in Docker
+# Inventaire Suite
 
-This repository is packaging Inventaire for Docker production environement. To run it for production outside Docker, see [inventaire-deploy](https://github.com/inventaire/inventaire-deploy).
+The Inventaire Suite is a containerized, production-ready Inventaire system that allows you to self-host a knowledge graph similar to [inventaire.io](https://inventaire.io).
 
-You may also check the official [Docker image](https://hub.docker.com/repository/docker/inventaire/inventaire/general)
+It is composed of several services:
+* **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging the Inventaire [server](https://github.com/inventaire/inventaire/) and [client](https://github.com/inventaire/inventaire-client/)
+* **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
+* **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
+* **[Nginx](https://hub.docker.com/_/nginx)**: a reverse proxy with TLS termination thank to Let's Encrypt [certbot](https://hub.docker.com/r/certbot/certbot).
+
+The service orchestration is implemented using Docker Compose.
+
+> 🔧 This document is for people wanting to self-host the full Inventaire Suite. If you are looking for the individual Inventaire image, head over to [hub.docker.com/r/inventaire/inventaire](https://hub.docker.com/r/inventaire/inventaire).
+
+> 💡 This document presumes familiarity with basic Linux administration tasks and with Docker and Docker Compose.
 
 ## Summary
 
@@ -23,18 +33,30 @@ You may also check the official [Docker image](https://hub.docker.com/repository
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Requirements
+## Quickstart
+### Requirements
+#### Hardware
+* Network connection with a public IP address
+* 4 GB RAM
+* 10 GB free disk space
 
-- [docker-compose](https://docs.docker.com/compose/gettingstarted/) up and ready
-- git
+#### Software
+* [Docker](https://docs.docker.com/get-started/get-docker/) >= v22.0
+* [Docker compose](https://docs.docker.com/compose/gettingstarted/) >= v2
+* [git](https://git-scm.com/)
 
-## Install
+#### Domain name
+You need a DNS records that resolves to your machine's public IP address
 
+## Initial setup
+
+### Download this repository
 ```sh
 git clone https://github.com/inventaire/docker-inventaire.git
 cd docker-inventaire
 ```
 
+### Initial configuration
 Rename `dotenv` file to `.env`, and customize the variables (mainly adding the domain name, and a couchdb password):
 
 ```sh
@@ -76,43 +98,55 @@ echo "module.exports = {
 " > ./inventaire/config/local-production.cjs
 ```
 
-Set the email server by editing the file `config/local-production.cjs`. For example:
-
-```js
-mailer: {
-  disabled: false,
-  nodemailer: {
-    host: 'smtp.an-email-provider.net',
-    port: 587,
-    auth: {
-      user: 'user',
-      pass: 'password'
-    },
-  },
-},
-```
-
 ## Reverse proxy configuration
 
-Generate the first SSL certificate with Let's Encrypt
+Inventaire only provides configuration files for Nginx.
+
+Run dependencies:
 
 ```sh
-docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsencrypt" certbot/certbot certonly --standalone
+sudo mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
+```
+
+Install nginx and certbot
+
+Copy the nginx configuration template
+
+```sh
+PUBLIC_HOSTNAME=$(grep -oP 'PUBLIC_HOSTNAME=\K.*' .env) PROJECT_ROOT=$(grep -oP 'PROJECT_ROOT=\K.*' .env) envsubst < nginx/templates/default.conf.template > nginx/default
+sudo mv nginx/default /etc/nginx/sites-available/default
+```
+
+Activate the configuration file
+
+```sh
+sudo ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+```
+
+To generate the certificate for your domain as required to make https work, you can use Let's Encrypt:
+
+```sh
+sudo systemctl stop nginx
+sudo certbot certonly --standalone --post-hook "systemctl restart nginx"
+sudo systemctl restart nginx
+```
+
+When certbot is done, you may uncomment lines starting with `# ssl_certificate` and `# ssl_certificate_key` in `/etc/nginx/sites-available/default.conf` and restart nginx.
+
+Certbot should have installed a cron to automatically renew your certificate.
+Since nginx template supports webroot renewal, we suggest you to update the renewal config file to use the webroot authenticator:
+
+```sh
+# Replace authenticator = standalone by authenticator = webroot
+# Add webroot_path = /var/www/certbot
+sudo vim /etc/letsencrypt/renewal/your-domain.com.conf
 ```
 
 ## Usage
 
-Start CouchDB, Elasticsearch, Nginx and the Inventaire [server](https://github.com/inventaire/inventaire) in production mode
+Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in production mode
 ```sh
 docker-compose up
-```
-
-Go to the sign up page (`https://DOMAIN_NAME/signup`) and create a user
-
-Make the newly created user an admin (replace `your_username` in the command below by the user username) :
-
-```sh
-docker exec $(docker ps -f name=_inventaire --format "{{.ID}}") npm run db-actions:update-user-role-from-username your_username add admin
 ```
 
 ## Tips
@@ -184,6 +218,3 @@ See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsear
 CouchDB may warn constantly that `_users` database does not exist, [as documented](https://docs.couchdb.org/en/latest/setup/single-node.html), you can create de database with:
 
 `curl -X PUT http://127.0.0.1:5984/_users`
-
-`docker exec $(docker ps -f name=couchdb --format "{{.ID}}") curl  -H 'Content-Type:application/json' -H 'Accept: application/json' -XPUT "http://couchdb:password@localhost:5984/_users"`
-
