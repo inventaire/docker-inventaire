@@ -22,7 +22,6 @@ services:
     #   - "5984:5984"
     volumes:
       - 'couchdb:/opt/couchdb/data'
-      - './configs:/opt/couchdb/etc/local.d'
     tty: true
     restart: unless-stopped
   elasticsearch:
