@@ -1,3 +1,5 @@
 FROM nginx
 
 RUN mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
+
+RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048
