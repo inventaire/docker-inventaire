@@ -32,8 +32,8 @@ server {
     listen [::]:443 ssl http2;
     server_name ${PUBLIC_HOSTNAME};
 
-    # ssl_certificate /etc/nginx/ssl/live/${PUBLIC_HOSTNAME}/fullchain.pem;
-    # ssl_certificate_key /etc/nginx/ssl/live/${PUBLIC_HOSTNAME}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${PUBLIC_HOSTNAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${PUBLIC_HOSTNAME}/privkey.pem;
 
     include /etc/nginx/snippets/ssl.conf;
 
