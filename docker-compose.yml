@@ -12,7 +12,6 @@ services:
     # Uncomment if you want to access the code:
     # volumes:
     #   - ./inventaire/server:${PROJECT_ROOT}
-    tty: true
     logging:
       options:
         max-size: "10m"
@@ -29,7 +28,6 @@ services:
     #   - "5984:5984"
     volumes:
       - 'couchdb:/opt/couchdb/data'
-    tty: true
     restart: unless-stopped
   elasticsearch:
     image: elasticsearch:7.17.28
