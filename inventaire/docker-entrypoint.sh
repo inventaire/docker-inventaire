@@ -17,7 +17,6 @@ module.exports = {
   orgName: '${ORG_NAME}',
   orgUrl: '${ORG_URL}',
   contactAddress: '${CONTACT_ADDRESS}',
-
   db: {
     username: '${COUCHDB_USER}',
     password: '${COUCHDB_PASSWORD}',
@@ -35,6 +34,24 @@ module.exports = {
         user: '${MAILER_SMTP_USERNAME}',
         pass: '${MAILER_SMTP_PASSWORD}'
       },
+    },
+  },
+  mapTilesAccessToken: '${MAP_TILES_ACCESS_TOKEN}',
+  matomo: {
+    enabled: ${MOTOMO_ENABLED},
+    endpoint: '${MOTOMO_ENDPOINT}',
+    idsite: ${MOTOMO_IDSITE},
+    rec: ${MOTOMO_REC},
+  },
+  mediaStorage: {
+    mode: '${MEDIA_STORAGE_MODE}',
+    swift: {
+      username: '${SWIFT_USERNAME}',
+      password: '${SWIFT_PASSWORD}',
+      authUrl: '${SWIFT_AUTH_URL}',
+      publicURL: '${SWIFT_PUBLIC_URL}',
+      tenantName: '${SWIFT_TENANT_NAME}',
+      region: '${SWIFT_REGION}',
     },
   },
 
