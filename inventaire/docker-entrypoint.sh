@@ -4,8 +4,11 @@ set -eu
 
 cd /opt/inventaire
 
-# Overwrite the local-${NODE_ENV} config with environment variables every time the container is restarted
-cat > "./config/local-${NODE_ENV}.cjs" << EOF
+# Overwrites the local config with environment variables every time the container is restarted
+# This file can be itself overwritten either by ./config/local-production.cjs (assuming NODE_ENV=production) or by NODE_CONFIG
+# See https://github.com/node-config/node-config/wiki/Configuration-Files#file-load-order
+# and https://github.com/node-config/node-config/wiki/Environment-Variables#node_config
+cat > "./config/local.cjs" << EOF
 module.exports = {
   hostname: 'inventaire',
   port: '${INVENTAIRE_PORT}',
