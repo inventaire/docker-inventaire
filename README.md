@@ -4,9 +4,8 @@ The Inventaire Suite is a containerized, production-ready Inventaire system that
 
 It is composed of several services:
 * **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging:
-  * the Inventaire [server](https://git.inventaire.io/inventaire/)
-  * the [client](https://git.inventaire.io/inventaire-client/)
-  * the embedded database: LevelDB
+  * the Inventaire [server](https://git.inventaire.io/inventaire/), which comes with its embedded database: LevelDB
+  * the Inventaire [client](https://git.inventaire.io/inventaire-client/)
 * **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
 * **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
 * **[Nginx](https://hub.docker.com/_/nginx)**: a reverse proxy with TLS termination thank to Let's Encrypt [certbot](https://hub.docker.com/r/certbot/certbot).
@@ -22,17 +21,20 @@ The service orchestration is implemented using Docker Compose.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Requirements](#requirements)
-- [Install](#install)
-- [Reverse proxy configuration](#reverse-proxy-configuration)
+- [Quickstart](#quickstart)
+  - [Requirements](#requirements)
+    - [Hardware](#hardware)
+    - [Software](#software)
+    - [Domain name](#domain-name)
+    - [Open ports](#open-ports)
+- [Initial setup](#initial-setup)
+  - [Download this repository](#download-this-repository)
+  - [Initial configuration](#initial-configuration)
+    - [Generate a TLS certificate](#generate-a-tls-certificate)
 - [Usage](#usage)
 - [Tips](#tips)
-  - [Fixtures](#fixtures)
-  - [Path autocomplete](#path-autocomplete)
-  - [Run inventaire server and client outside of Docker](#run-inventaire-server-and-client-outside-of-docker)
 - [Troubleshooting](#troubleshooting)
   - [Elasticsearch errors](#elasticsearch-errors)
-  - [Quieting CouchDB notice](#quieting-couchdb-notice)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -49,7 +51,14 @@ The service orchestration is implemented using Docker Compose.
 * [git](https://git-scm.com/)
 
 #### Domain name
+> Ignore this section if you are just testing on your local machine
+
 You need a DNS records that resolves to your machine's public IP address
+
+#### Open ports
+> Ignore this section if you are just testing on your local machine
+
+Your machine's firewall should let the http ports (`80` and `443`) open.
 
 ## Initial setup
 
@@ -60,50 +69,16 @@ cd docker-inventaire
 ```
 
 ### Initial configuration
-Rename `dotenv` file to `.env`, and customize the variables (mainly adding the domain name, and a couchdb password):
-
+Copy the `dotenv` file to `.env`
 ```sh
 cp dotenv .env
-vim .env
 ```
+and open this new `.env` file with a text editor to customize the variables (mainly adding your own domain name, and setup a couchdb password)
 
-Clone `inventaire` core application [server](https://git.inventaire.io/inventaire)
+#### Generate a TLS certificate
+> Ignore this section if you are just testing on your local machine
 
-```sh
-git clone https://git.inventaire.io/inventaire.git
-```
-
-Build
-
-```sh
-docker-compose build
-```
-
-Download Node dependencies and install the [client repository](https://git.inventaire.io/inventaire-client):
-
-```sh
-cd inventaire
-npm install tsx && npm install
-cd ..
-```
-
-Configure inventaire so that it can connect to CouchDB. For that, create a file `config/local-production.cjs` with the following command:
-
-```sh
-echo "module.exports = {
-  db: {
-    hostname: 'couchdb',
-  },
-  elasticsearch: {
-    origin: 'http://elasticsearch:9200',
-  }
-}
-" > ./inventaire/config/local-production.cjs
-```
-
-## Reverse proxy configuration
-
-Generate the first SSL certificate with Let's Encrypt
+Generate the first TLS certificate with Let's Encrypt
 
 ```sh
 docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsencrypt" certbot/certbot certonly --standalone
@@ -111,66 +86,19 @@ docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsenc
 
 ## Usage
 
-Start CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire) in production mode
+Start all the services (Nginx, CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire)) in production mode:
 ```sh
-docker-compose up
+docker-compose up -d
+```
+
+Alternatively, to test locally, you can start only Inventaire and its dependencies (CouchDB and Elasticsearch) without Nginx, with the following command:
+```sh
+docker-compose up inventaire
 ```
 
 ## Tips
 
-General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
-
-### Fixtures
-
-In case you would like to play with out-of-the-box data.
-
-Run API tests to populate tests dbs
-
-```sh
-docker-compose -f docker-compose.yml exec inventaire npm run test-api
-```
-
-- Replicate `*-tests` dbs documents into `*` dbs
-
-```sh
-`docker-compose exec inventaire npm run replicate-tests-db`
-```
-
-### Path autocomplete
-
-Create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
-
-```sh
-sudo ln ~/path/to/inventaire-docker/inventaire /opt -s
-```
-
-Alternatively, as root in inventaire container:
-
-```sh
-mkdir /supervisor/path/to/inventaire
-ln -s /opt/ /supervisor/path/to/inventaire
-```
-
-### Run inventaire server and client outside of Docker
-
-It can sometimes be more convenient to keep CouchDB and Elasticsearch in Docker, but to run the Inventaire server and client outside. For this, you will need to have [NodeJS](https://nodejs.org/) >= v16 installed on your machine, which should make both `node` and `npm` executables accessible in your terminal
-
-Then you can start CouchDB and Elasticsearch in the background
-```sh
-docker-compose up couchdb elasticsearch -d
-```
-
-Start the Inventaire server in development mode
-```sh
-cd inventaire
-npm run watch
-```
-
-And in another terminal, start the client Webpack dev server
-```sh
-cd inventaire/client
-npm run watch
-```
+General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs).
 
 ## Troubleshooting
 
@@ -179,9 +107,3 @@ npm run watch
 - `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
 
 See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html)
-
-### Quieting CouchDB notice
-
-CouchDB may warn constantly that `_users` database does not exist, [as documented](https://docs.couchdb.org/en/latest/setup/single-node.html), you can create de database with:
-
-`curl -X PUT http://127.0.0.1:5984/_users`
