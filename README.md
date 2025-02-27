@@ -88,12 +88,12 @@ docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsenc
 
 Start all the services (Nginx, CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire)) in production mode:
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 Alternatively, to test locally, you can start only Inventaire and its dependencies (CouchDB and Elasticsearch) without Nginx, with the following command:
 ```sh
-docker-compose up inventaire
+docker compose up inventaire
 ```
 
 ## Tips
