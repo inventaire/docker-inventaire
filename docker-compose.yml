@@ -60,6 +60,9 @@ services:
       - certbot-www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
     env_file: .env
+    depends_on:
+      # Required to be able to define the `inventaire` host as an upstream
+      - inventaire
     restart: unless-stopped
   certbot:
     image: certbot/certbot:latest
