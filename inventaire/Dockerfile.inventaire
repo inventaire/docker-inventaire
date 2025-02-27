@@ -30,10 +30,10 @@ RUN npm ci \
   && npm ci --omit=dev --ignore-scripts \
   && npm cache clean --force
 
-WORKDIR /opt/inventaire
+COPY docker-entrypoint.sh /opt/docker-entrypoint.sh
 
-COPY docker-entrypoint.sh docker-entrypoint.sh
+WORKDIR /opt/inventaire
 
 # Avoid using npm script to start the server
 # See https://adambrodziak.pl/dockerfile-good-practices-for-node-and-npm#heading-use-node-not-npm-to-start-the-server
-ENTRYPOINT [ "./docker-entrypoint.sh" ]
+ENTRYPOINT [ "/opt/docker-entrypoint.sh" ]

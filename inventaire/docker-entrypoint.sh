@@ -2,6 +2,8 @@
 
 set -eu
 
+cd /opt/inventaire
+
 # Overwrite the local-${NODE_ENV} config with environment variables every time the container is restarted
 cat > "./config/local-${NODE_ENV}.cjs" << EOF
 module.exports = {
