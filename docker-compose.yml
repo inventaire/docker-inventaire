@@ -24,6 +24,10 @@ services:
     env_file: .env
     # Uncomment ports to get access to the db
     # ie. for database transformation, querying, UI access (http://localhost:5984/_utils/)
+    # /!\ Beware that exposing container ports like this might bypass your firewall rules
+    # See https://docs.docker.com/engine/install/ubuntu/#firewall-limitations
+    # Keeping it bound to localhost (which is the default) should be safe though
+    # (that is, contrary to binding to 0.0.0.0)
     # ports:
     #   - "5984:5984"
     volumes:
