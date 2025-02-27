@@ -91,8 +91,6 @@ server {
        }
     }
 
-    # following aliases made in order to respect the url structure
-    # the server alone would follow: especially, mounting /static on /public
     root  /opt/inventaire/client;
     location /public/ {
         include /etc/nginx/snippets/security_headers.conf;
