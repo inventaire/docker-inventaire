@@ -1,5 +1,4 @@
 .env
 data
 log
-configs/docker.ini
-
+.eslintcache
