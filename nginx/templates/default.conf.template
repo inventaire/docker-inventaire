@@ -1,8 +1,9 @@
-# PROJECT_ROOT and PUBLIC_HOSTNAME are set with nginx image function, which will extract environment variables before nginx starts
+# The INVENTAIRE_PORT and PUBLIC_HOSTNAME variables are set with nginx image function,
+# which will extract environment variables before nginx starts
 # See https://hub.docker.com/_/nginx
 
 upstream inventaire {
-    server 127.0.0.1:3006 fail_timeout=5s;
+    server inventaire:${INVENTAIRE_PORT} fail_timeout=5s;
 }
 
 # Using error_page as a way to have a named location that can
@@ -89,7 +90,7 @@ server {
 
     # following aliases made in order to respect the url structure
     # the server alone would follow: especially, mounting /static on /public
-    root  ${PROJECT_ROOT}/inventaire/client;
+    root  /opt/inventaire/client;
     location /public/ {
         include /etc/nginx/snippets/security_headers.conf;
         limit_except GET {
