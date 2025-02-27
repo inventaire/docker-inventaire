@@ -26,9 +26,6 @@ MAILER_SMTP_PASSWORD=your_password_on_smtp.example.org
 # Modify if you know what you are doing
 ########
 
-# Root path within docker container
-PROJECT_ROOT=/opt/inventaire
-
 NODE_ENV=production
 NODE_APP_INSTANCE=federated
 
