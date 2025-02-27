@@ -91,6 +91,23 @@ server {
        }
     }
 
+    location ~ ^/img/ {
+        return 404;
+    }
+
+    location @invimg {
+      include /etc/nginx/snippets/security_headers.conf;
+      default_type "image/jpeg";
+      # add_header Content-Type "image/jpeg";
+      add_header X-File-Cache "miss";
+      add_header Content-Security-Policy "sandbox";
+      proxy_temp_path      /tmp/nginx/tmp;
+      proxy_store          /tmp/nginx/resize/$uri;
+      proxy_store_access   user:rw  group:rw  all:r;
+      proxy_http_version 1.1;
+      proxy_pass http://inv;
+    }
+
     root  /opt/inventaire/client;
     location /public {
         include /etc/nginx/snippets/security_headers.conf;
