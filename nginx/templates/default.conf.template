@@ -92,7 +92,7 @@ server {
     }
 
     root  /opt/inventaire/client;
-    location /public/ {
+    location /public {
         include /etc/nginx/snippets/security_headers.conf;
         limit_except GET {
             deny  all;
@@ -171,5 +171,20 @@ server {
       include /etc/nginx/snippets/security_headers.conf;
       default_type "text/plain";
       root /var/www/certbot;
+    }
+
+    location / {
+        include /etc/nginx/snippets/security_headers.conf;
+        gzip_static on;
+        limit_except GET {
+           deny all;
+       }
+       # index.html should always be fresh out of the server
+       # time is negative => “Cache-Control: no-cache”
+       # http://nginx.org/en/docs/http/ngx_http_headers_module.html
+       # Those headers should be set here and not at "location /" as they would be ignored (cf http://serverfault.com/a/786248)
+       expires -1;
+       # The remaining routes (/users, /entity, etc) should be handled by the client router
+       rewrite .* /public/index.html break;
     }
 }
