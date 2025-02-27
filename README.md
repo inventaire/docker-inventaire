@@ -6,7 +6,7 @@ It is composed of several services:
 * **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging:
   * the Inventaire [server](https://github.com/inventaire/inventaire/)
   * the [client](https://github.com/inventaire/inventaire-client/)
-  * the embeded database: LevelDB
+  * the embedded database: LevelDB
 * **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
 * **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
 * **[Nginx](https://hub.docker.com/_/nginx)**: a reverse proxy with TLS termination thank to Let's Encrypt [certbot](https://hub.docker.com/r/certbot/certbot).

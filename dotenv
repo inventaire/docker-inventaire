@@ -1,20 +1,11 @@
 # Your website domain name
 PUBLIC_HOSTNAME=an-inventaire-site.org
 
-# Root path within docker container
-PROJECT_ROOT=/opt/inventaire
-
 # Generic user, to modify only for good reason
 COUCHDB_USER=couchdb
 # Consider passwords with no less than 32 charracters, for example:
 #   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32
 COUCHDB_PASSWORD=your_password
-
-NODE_ENV=production
-NODE_APP_INSTANCE=federated
-
-# Conventional port for Inventaire server in federated mode
-INVENTAIRE_PORT=3016
 
 INSTANCE_NAME='My Inventaire Instance'
 
@@ -24,3 +15,18 @@ ORG_URL='https://inventaire.example.org'
 
 # Users receiving emails from the instance can reply to this
 CONTACT_ADDRESS='contact@inventaire.example.org'
+
+
+########
+# Everything below is a default configuration
+# Modify if you know what you are doing
+########
+
+# Root path within docker container
+PROJECT_ROOT=/opt/inventaire
+
+NODE_ENV=production
+NODE_APP_INSTANCE=federated
+
+# Conventional port for Inventaire server in federated mode
+INVENTAIRE_PORT=3016
