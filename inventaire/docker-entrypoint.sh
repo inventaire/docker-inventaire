@@ -2,8 +2,8 @@
 
 set -eu
 
-# Overwrite the local config with environment variables every time the container is restarted
-cat > ./config/local.cjs << EOF
+# Overwrite the local-production config with environment variables every time the container is restarted
+cat > ./config/local-production.cjs << EOF
 module.exports = {
   port: '${INVENTAIRE_PORT}',
   publicHostname: '${PUBLIC_HOSTNAME}',
