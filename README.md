@@ -103,46 +103,10 @@ echo "module.exports = {
 
 ## Reverse proxy configuration
 
-Inventaire only provides configuration files for Nginx.
-
-Run dependencies:
+Generate the first SSL certificate with Let's Encrypt
 
 ```sh
-sudo mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
-```
-
-Install nginx and certbot
-
-Copy the nginx configuration template
-
-```sh
-PUBLIC_HOSTNAME=$(grep -oP 'PUBLIC_HOSTNAME=\K.*' .env) PROJECT_ROOT=$(grep -oP 'PROJECT_ROOT=\K.*' .env) envsubst < nginx/templates/default.conf.template > nginx/default
-sudo mv nginx/default /etc/nginx/sites-available/default
-```
-
-Activate the configuration file
-
-```sh
-sudo ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
-```
-
-To generate the certificate for your domain as required to make https work, you can use Let's Encrypt:
-
-```sh
-sudo systemctl stop nginx
-sudo certbot certonly --standalone --post-hook "systemctl restart nginx"
-sudo systemctl restart nginx
-```
-
-When certbot is done, you may uncomment lines starting with `# ssl_certificate` and `# ssl_certificate_key` in `/etc/nginx/sites-available/default.conf` and restart nginx.
-
-Certbot should have installed a cron to automatically renew your certificate.
-Since nginx template supports webroot renewal, we suggest you to update the renewal config file to use the webroot authenticator:
-
-```sh
-# Replace authenticator = standalone by authenticator = webroot
-# Add webroot_path = /var/www/certbot
-sudo vim /etc/letsencrypt/renewal/your-domain.com.conf
+docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsencrypt" certbot/certbot certonly --standalone
 ```
 
 ## Usage
