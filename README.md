@@ -98,7 +98,7 @@ docker compose up inventaire
 
 ## Tips
 
-General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
+General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs).
 
 ## Troubleshooting
 
