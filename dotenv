@@ -16,6 +16,10 @@ ORG_URL='https://inventaire.example.org'
 # Users receiving emails from the instance can reply to this
 CONTACT_ADDRESS='contact@inventaire.example.org'
 
+MAILER_SMTP_HOST=smtp.example.org
+MAILER_SMTP_PORT=587
+MAILER_SMTP_USERNAME=your_username_on_smtp.example.org
+MAILER_SMTP_PASSWORD=your_password_on_smtp.example.org
 
 ########
 # Everything below is a default configuration
