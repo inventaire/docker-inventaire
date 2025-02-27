@@ -43,6 +43,11 @@ services:
       # Limit memory usage to 512MB, that should be enough at first
       # See https://www.elastic.co/guide/en/elasticsearch/reference/current/advanced-configuration.html
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - 'xpack.security.enabled=false'
+      - 'ingest.geoip.downloader.enabled=false'
+      - 'logger.org.elasticsearch=ERROR'
+      - 'logger.com.azure.core=ERROR'
+      - 'logger.org.apache=ERROR'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
     restart: unless-stopped
