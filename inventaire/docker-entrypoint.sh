@@ -19,7 +19,19 @@ module.exports = {
   },
   elasticsearch: {
     origin: 'http://elasticsearch:9200',
-  }
+  },
+  mailer: {
+    disabled: false,
+    nodemailer: {
+      host: '${MAILER_SMTP_HOST}',
+      port: ${MAILER_SMTP_PORT},
+      auth: {
+        user: '${MAILER_SMTP_USERNAME}',
+        pass: '${MAILER_SMTP_PASSWORD}'
+      },
+    },
+  },
+
 }
 EOF
 
