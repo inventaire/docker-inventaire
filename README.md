@@ -3,7 +3,10 @@
 The Inventaire Suite is a containerized, production-ready Inventaire system that allows you to self-host a knowledge graph similar to [inventaire.io](https://inventaire.io).
 
 It is composed of several services:
-* **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging the Inventaire [server](https://github.com/inventaire/inventaire/) and [client](https://github.com/inventaire/inventaire-client/)
+* **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging:
+  * the Inventaire [server](https://github.com/inventaire/inventaire/)
+  * the [client](https://github.com/inventaire/inventaire-client/)
+  * the in-memory database: LevelDB
 * **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
 * **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
 * **[Nginx](https://hub.docker.com/_/nginx)**: a reverse proxy with TLS termination thank to Let's Encrypt [certbot](https://hub.docker.com/r/certbot/certbot).
