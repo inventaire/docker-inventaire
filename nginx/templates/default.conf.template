@@ -2,7 +2,7 @@
 # which will extract environment variables before nginx starts
 # See https://hub.docker.com/_/nginx
 
-upstream inventaire {
+upstream inv {
     server inventaire:${INVENTAIRE_PORT} fail_timeout=5s;
 }
 
@@ -141,7 +141,7 @@ server {
         proxy_read_timeout 3600;
         proxy_redirect off;
         proxy_http_version 1.1;
-        proxy_pass http://inventaire;
+        proxy_pass http://inv;
     }
 
     location = /favicon.ico {
