@@ -19,7 +19,7 @@ RUN git clone http://github.com/inventaire/inventaire --depth 1 . \
   && mkdir -p /opt/inventaire/client \
   && npm ci --omit=dev \
   && npm run build \
-  && git clone https://github.com/inventaire/inventaire-client.git ./client --branch docker --depth 1 \
+  && git clone https://git.inventaire.io/inventaire-client.git ./client --branch docker --depth 1 \
   && mkdir -p /opt/inventaire/client/public/sitemaps
 
 WORKDIR /opt/inventaire/client
