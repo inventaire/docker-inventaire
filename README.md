@@ -4,8 +4,8 @@ The Inventaire Suite is a containerized, production-ready Inventaire system that
 
 It is composed of several services:
 * **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging:
-  * the Inventaire [server](https://github.com/inventaire/inventaire/)
-  * the [client](https://github.com/inventaire/inventaire-client/)
+  * the Inventaire [server](https://git.inventaire.io/inventaire/)
+  * the [client](https://git.inventaire.io/inventaire-client/)
   * the embedded database: LevelDB
 * **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
 * **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
@@ -55,7 +55,7 @@ You need a DNS records that resolves to your machine's public IP address
 
 ### Download this repository
 ```sh
-git clone https://github.com/inventaire/docker-inventaire.git
+git clone https://git.inventaire.io/docker-inventaire.git
 cd docker-inventaire
 ```
 
@@ -67,10 +67,10 @@ cp dotenv .env
 vim .env
 ```
 
-Clone `inventaire` core application [server](https://github.com/inventaire/inventaire)
+Clone `inventaire` core application [server](https://git.inventaire.io/inventaire)
 
 ```sh
-git clone https://github.com/inventaire/inventaire.git
+git clone https://git.inventaire.io/inventaire.git
 ```
 
 Build
@@ -79,7 +79,7 @@ Build
 docker-compose build
 ```
 
-Download Node dependencies and install the [client repository](https://github.com/inventaire/inventaire-client):
+Download Node dependencies and install the [client repository](https://git.inventaire.io/inventaire-client):
 
 ```sh
 cd inventaire
@@ -147,14 +147,14 @@ sudo vim /etc/letsencrypt/renewal/your-domain.com.conf
 
 ## Usage
 
-Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in production mode
+Start CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire) in production mode
 ```sh
 docker-compose up
 ```
 
 ## Tips
 
-General tips on how to run Inventaire can be found in the [server repository docs](https://github.com/inventaire/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
+General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
 
 ### Fixtures
 
