@@ -40,9 +40,9 @@ services:
       - 'transport.host=elasticsearch'
       # See https://www.elastic.co/guide/en/elasticsearch/reference/7.16/docker.html
       - 'discovery.type=single-node'
-      # Limit memory usage to 1Go,
+      # Limit memory usage to 512MB, that should be enough at first
       # See https://www.elastic.co/guide/en/elasticsearch/reference/current/advanced-configuration.html
-      - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     volumes:
       - 'elasticsearch:/usr/share/elasticsearch/data'
     restart: unless-stopped
