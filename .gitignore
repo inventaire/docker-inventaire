@@ -1,5 +1,6 @@
+.docker
 .env
+.eslintcache
+certbot
 data
 log
-.eslintcache
-.docker
