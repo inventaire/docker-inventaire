@@ -1,5 +1,5 @@
 FROM nginx
 
-RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048
+RUN [ ! -f /etc/nginx/dhparam.pem ] && openssl dhparam -out /etc/nginx/dhparam.pem 2048
 
 RUN mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets && chown -R nginx:nginx /tmp/nginx
