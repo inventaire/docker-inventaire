@@ -1,202 +1,109 @@
-Run [Inventaire](https://github.com/inventaire/inventaire) in Docker
+# Inventaire Suite
 
-This repository is meant to support running Inventaire for testing and development. For production, see [inventaire-deploy](https://github.com/inventaire/inventaire-deploy).
+The Inventaire Suite is a containerized, production-ready Inventaire system that allows you to self-host a knowledge graph similar to [inventaire.io](https://inventaire.io).
+
+It is composed of several services:
+* **[Inventaire](https://hub.docker.com/r/inventaire/inventaire)**: a Docker image packaging:
+  * the Inventaire [server](https://git.inventaire.io/inventaire/), which comes with its embedded database: LevelDB
+  * the Inventaire [client](https://git.inventaire.io/inventaire-client/)
+* **[CouchDB](https://hub.docker.com/_/couchdb)**: the primary database used by the Inventaire server
+* **[Elasticsearch](https://hub.docker.com/_/elasticsearch)**: a secondary database used by Inventaire for text and geographic search features
+* **[Nginx](https://hub.docker.com/_/nginx)**: a reverse proxy with TLS termination thank to Let's Encrypt [certbot](https://hub.docker.com/r/certbot/certbot).
+
+The service orchestration is implemented using Docker Compose.
+
+> 🔧 This document is for people wanting to self-host the full Inventaire Suite. If you are looking for the individual Inventaire image, head over to [hub.docker.com/r/inventaire/inventaire](https://hub.docker.com/r/inventaire/inventaire).
+
+> 💡 This document presumes familiarity with basic Linux administration tasks and with Docker and Docker Compose.
 
 ## Summary
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Requirements](#requirements)
-- [Install](#install)
+- [Quickstart](#quickstart)
+  - [Requirements](#requirements)
+    - [Hardware](#hardware)
+    - [Software](#software)
+    - [Domain name](#domain-name)
+    - [Open ports](#open-ports)
+- [Initial setup](#initial-setup)
+  - [Download this repository](#download-this-repository)
+  - [Initial configuration](#initial-configuration)
+    - [Generate a TLS certificate](#generate-a-tls-certificate)
 - [Usage](#usage)
 - [Tips](#tips)
-  - [Fixtures](#fixtures)
-  - [Tests](#tests)
-  - [Push git commits](#push-git-commits)
-  - [Rootless Docker](#rootless-docker)
-  - [Run inventaire server and client outside of Docker](#run-inventaire-server-and-client-outside-of-docker)
 - [Troubleshooting](#troubleshooting)
   - [Elasticsearch errors](#elasticsearch-errors)
-  - [Quieting CouchDB notice](#quieting-couchdb-notice)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Requirements
+## Quickstart
+### Requirements
+#### Hardware
+* Network connection with a public IP address
+* 4 GB RAM
+* 10 GB free disk space
 
-- [docker-compose](https://docs.docker.com/compose/gettingstarted/) up and ready
-- git
+#### Software
+* [Docker](https://docs.docker.com/get-started/get-docker/) >= v22.0
+* [Docker compose](https://docs.docker.com/compose/gettingstarted/) >= v2
+* [git](https://git-scm.com/)
 
-## Install
+#### Domain name
+> Ignore this section if you are just testing on your local machine
 
+You need a DNS records that resolves to your machine's public IP address
+
+#### Open ports
+> Ignore this section if you are just testing on your local machine
+
+Your machine's firewall should let the http ports (`80` and `443`) open.
+
+## Initial setup
+
+### Download this repository
 ```sh
-git clone https://github.com/inventaire/docker-inventaire.git
+git clone https://git.inventaire.io/docker-inventaire.git
 cd docker-inventaire
 ```
 
-Clone `inventaire` core application [server](https://github.com/inventaire/inventaire)
+### Initial configuration
+Copy the `dotenv` file to `.env`
+```sh
+cp dotenv .env
+```
+and open this new `.env` file with a text editor to customize the variables (mainly adding your own domain name, and setup a couchdb password)
+
+#### Generate a TLS certificate
+> Ignore this section if you are just testing on your local machine
+
+Generate the first TLS certificate with Let's Encrypt
 
 ```sh
-git clone https://github.com/inventaire/inventaire.git
+docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsencrypt" certbot/certbot certonly --standalone
 ```
-
-Build
-
-```sh
-docker-compose build
-```
-
-Download Node dependencies and install the [client repository](https://github.com/inventaire/inventaire-client):
-
-```sh
-docker-compose run --rm inventaire npm install
-```
-
-Configure inventaire so that it can connect to CouchDB. For that, create a file `config/local.cjs` with the following command:
-
-```sh
-echo "module.exports = {
-  db: {
-    username: 'yourcouchdbusername',
-    password: 'yourcouchdbpassword'
-  }
-}
-" > ./inventaire/config/local.cjs
-```
-
-NB: Those username and password should match the `COUCHDB_USER` and `COUCHDB_PASSWORD` environment variables set in `docker-compose.yml`
 
 ## Usage
 
-Start CouchDB, Elasticsearch, and the Inventaire [server](https://github.com/inventaire/inventaire) in development mode (modifications to the server files will reload the server), by default on port 3006
+Start all the services (Nginx, CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire)) in production mode:
 ```sh
-docker-compose up
+docker compose up -d
 ```
 
-To also work on the [client](https://github.com/inventaire/inventaire-client), you need to also start the webpack dev server:
+Alternatively, to test locally, you can start only Inventaire and its dependencies (CouchDB and Elasticsearch) without Nginx, with the following command:
 ```sh
-cd inventaire/client
-npm run watch
+docker compose up inventaire
 ```
 
 ## Tips
 
-General tips on how to run Inventaire can be found in the [server repository docs](https://github.com/inventaire/inventaire/tree/main/docs). Here after are some additional Docker-specific tips.
-
-### Fixtures
-
-In case you would like to play with out-of-the-box data.
-
-Run api tests to populate tests dbs (see Tests section)
-
-```sh
-docker-compose -f docker-compose.yml -f docker-compose.test.yml exec inventaire npm run test-api
-```
-
-- Replicate `*-tests` dbs documents into `*` dbs
-
-```sh
-`docker-compose exec inventaire npm run replicate-tests-db`
-```
-
-### Tests
-
-Start services with test environnement with [multiple compose files](https://docs.docker.com/compose/extends/#understanding-multiple-compose-files)
-
-```sh
-docker-compose -f docker-compose.yml -f docker-compose.test.yml up
-```
-
-Execute tests script
-
-```sh
-docker-compose exec inventaire npm run test-api
-```
-
-or execute directly the test command
-
-```sh
-docker-compose exec inventaire npm test /opt/inventaire/path/to/test/file
-```
-
-Tip : create a symbolic link on your machine between the inventaire folder and docker working directory on your machine at `/opt/`, in order to autocomplete path to test file to execute
-
-```sh
-sudo ln ~/path/to/inventaire-docker/inventaire /opt -s
-```
-
-Alternatively, as root in inventaire container:
-
-```sh
-mkdir /supervisor/path/to/inventaire
-ln -s /opt/ /supervisor/path/to/inventaire
-```
-
-### Push git commits
-
-To keep things simple, this installation steps above clone repositories in https, but if you want to push to a branch with ssh, you will probably need to change the repositories `origin`:
-```sh
-cd inventaire
-git remote set-url origin git@github.com:inventaire/inventaire.git
-cd client
-git remote set-url origin git@github.com:inventaire/inventaire-client.git
-```
-
-### Rootless Docker
-
-Docker Engine v20.10 is now available in rootless mode. If you would like to try it, you may follow the [official guide](https://docs.docker.com/engine/security/rootless/) (including command `export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock`).
-
-Start the inventaire install steps above, before installing dependencies, make sure that the owner of inventaire folder is the same as the owner inside the container.
-
-Delete `network_host` occurences from `docker-compose.yml` and adapt the `config/local.cjs` in consequence:
-
-```js
-module.exports = {
-  protocol: 'http',
-  port: 3006,
-  host: 'inventaire',
-  db: {
-    username: 'couchdb',
-    password: 'password',
-    protocol: 'http',
-    hostname: 'couch'
-  },
-  elasticsearch: {
-    host:'http://elasticsearch:9200'
-  }
-}
-```
-
-### Run inventaire server and client outside of Docker
-
-It can sometimes be more convenient to keep CouchDB and Elasticsearch in Docker, but to run the Inventaire server and client outside. For this you will need to:
-- have [NodeJS](https://nodejs.org/) >= v16 installed on your machine, which should make both `node` and `npm` executables accessible in your terminal
-
-Then you can start CouchDB and Elasticsearch in the background
-```sh
-docker-compose up couchdb elasticsearch -d
-```
-
-Start the Inventaire server in development mode
-```sh
-cd inventaire
-npm run watch
-```
-
-And in another terminal, start the client Webpack dev server
-```sh
-cd inventaire/client
-npm run watch
-```
+General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs).
 
 ## Troubleshooting
 
 ### Elasticsearch errors
+
 - `max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]`: fix by running the command `sudo sysctl -w vm.max_map_count=262144` on your host machine
 
 See also [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/7.9/docker.html)
-
-### Quieting CouchDB notice
-CouchDB may warn constantly that `_users` database does not exist, [as documented](https://docs.couchdb.org/en/latest/setup/single-node.html), you can create de database with:
-
-`curl -X PUT http://127.0.0.1:5984/_users`

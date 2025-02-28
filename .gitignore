@@ -1,5 +1,6 @@
-inventaire
+.docker
+.env
+.eslintcache
+certbot
 data
 log
-configs/docker.ini
-

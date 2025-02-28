@@ -1,0 +1,53 @@
+# Your website domain name
+PUBLIC_HOSTNAME=an-inventaire-site.org
+
+# Generic user, to modify only for good reason
+COUCHDB_USER=couchdb
+# Consider passwords with no less than 32 charracters, for example:
+#   cat /dev/urandom | tr -dc A-Za-z0-9-_ | head -c 32
+COUCHDB_PASSWORD=your_password
+
+INSTANCE_NAME='My Inventaire Instance'
+
+# Will be displayed on landing screen
+ORG_NAME='Example Organization'
+ORG_URL='https://inventaire.example.org'
+
+# Users receiving emails from the instance can reply to this
+CONTACT_ADDRESS='contact@inventaire.example.org'
+
+MAILER_SMTP_HOST=smtp.example.org
+MAILER_SMTP_PORT=587
+MAILER_SMTP_USERNAME=your_username_on_smtp.example.org
+MAILER_SMTP_PASSWORD=your_password_on_smtp.example.org
+
+# Required to use MapBox tiles within leaflet maps
+# See https://console.mapbox.com/account/access-tokens/
+MAP_TILES_ACCESS_TOKEN='youraccesstoken'
+
+# [OPTIONAL] Setup Matomo analytics https://matomo.org/
+MOTOMO_ENABLED=false
+MOTOMO_ENDPOINT=https://yourmatomoendpoint/matomo.php
+MOTOMO_IDSITE=1
+MOTOMO_REC=1
+
+MEDIA_STORAGE_MODE=local
+# Set MEDIA_STORAGE_MODE=swift and the following variables
+# to store users and groups images in an OpenStack Swift container
+SWIFT_USERNAME=customizedInLocalConfig
+SWIFT_PASSWORD=customizedInLocalConfig
+SWIFT_AUTH_URL=https://openstackEndpointToCustomize
+SWIFT_PUBLIC_URL=https://swiftPublicURL
+SWIFT_TENANT_NAME=12345678
+SWIFT_REGION=SBG-1
+
+########
+# Everything below is a default configuration
+# Modify if you know what you are doing
+########
+
+NODE_ENV=production
+NODE_APP_INSTANCE=federated
+
+# Conventional port for Inventaire server in federated mode
+INVENTAIRE_PORT=3016
