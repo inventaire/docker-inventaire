@@ -32,6 +32,7 @@ The service orchestration is implemented using Docker Compose.
   - [Initial configuration](#initial-configuration)
     - [Generate a TLS certificate](#generate-a-tls-certificate)
 - [Usage](#usage)
+- [Update](#update)
 - [Tips](#tips)
 - [Troubleshooting](#troubleshooting)
   - [Elasticsearch errors](#elasticsearch-errors)
@@ -88,12 +89,34 @@ docker run -it --rm --name certbot -p 80:80 -v "$(pwd)/certbot/conf:/etc/letsenc
 
 Start all the services (Nginx, CouchDB, Elasticsearch, and the Inventaire [server](https://git.inventaire.io/inventaire)) in production mode:
 ```sh
-docker compose up -d
+docker compose up --detach
 ```
 
 Alternatively, to test locally, you can start only Inventaire and its dependencies (CouchDB and Elasticsearch) without Nginx, with the following command:
 ```sh
 docker compose up inventaire
+```
+
+## Update
+
+Before updating to the latest version, check that there are no breaking changes.
+You can find your current version number by visiting fetching the URL `/api/config` on your domain (example: https://inventaire.io/api/config).
+You can find details about the changes since your version on this page: /home/maxlath/code/inventaire/inventaire/CHANGELOG.md.
+For changes marked to require data transformation, [some knowledge of CouchDB is recommended](https://docs.couchdb.org/en/stable/intro/index.html), as well as familiarizing yourself with the [recommanded way to export, transform and reimport data in CouchDB](https://github.com/inventaire/inventaire/blob/main/docs/administration/couchdb_data_transformations.md).
+
+```sh
+cd docker-inventaire
+# Pull updates to this repository (might include database versions updates, and such)
+git pull origin main
+# Pull the updated images
+docker compose pull
+# Stop and remove the previous `inventaire` container
+# Include the `nginx` container and `--volumes` as otherwise the volume shared between the `inventaire` and the `nginx` container keep the files from the previous image
+docker compose down inventaire nginx --volumes
+# Restart containers with the new image (with the --detach option, to be able to close the terminal)
+docker compose up --detach
+# Check that it restarted without errors
+docker compose logs --follow --tail 500 inventaire
 ```
 
 ## Tips
