@@ -13,13 +13,16 @@ USER 1000:1000
 
 WORKDIR /opt/inventaire
 
+ARG GIT_REF=main
+ENV DOCKER=1
+
 # - Create the client folder to prevent the server postinstall to run `npm run install-client` as it does it with the wrong workdir and env
 # - Create the public/sitemaps folder to prevent the client postinstall to run `npm run generate-sitemaps` (which needs to be updated to support non-inventaire.io instances)
-RUN git clone http://github.com/inventaire/inventaire --depth 1 . \
+RUN git clone https://git.inventaire.io/inventaire --depth 1 --branch "${GIT_REF}" . \
   && mkdir -p /opt/inventaire/client \
   && npm ci --omit=dev \
   && npm run build \
-  && git clone https://git.inventaire.io/inventaire-client.git ./client --branch docker --depth 1 \
+  && git clone https://git.inventaire.io/inventaire-client ./client --branch docker --depth 1 --branch "${GIT_REF}" \
   && mkdir -p /opt/inventaire/client/public/sitemaps
 
 WORKDIR /opt/inventaire/client
