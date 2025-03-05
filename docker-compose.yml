@@ -22,6 +22,9 @@ services:
       context: ./couchdb
       dockerfile: Dockerfile.couchdb
     env_file: .env
+    environment:
+      # See https://docs.couchdb.org/en/stable/maintenance/performance.html#disk-and-file-system-performance
+      - 'ERL_FLAGS=+A 4'
     # Uncomment ports to get access to the db
     # ie. for database transformation, querying, UI access (http://localhost:5984/_utils/)
     # /!\ Beware that exposing container ports like this might bypass your firewall rules
