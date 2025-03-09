@@ -1,5 +1,6 @@
 services:
   inventaire:
+    profiles: [ 'prod' ]
     image: inventaire/inventaire:latest
     env_file: .env
     # You may also build image from sources with:
@@ -18,6 +19,7 @@ services:
         max-file: "3"
     restart: unless-stopped
   couchdb:
+    profiles: [ 'dev', 'prod' ]
     build:
       context: ./couchdb
       dockerfile: Dockerfile.couchdb
@@ -31,12 +33,13 @@ services:
     # See https://docs.docker.com/engine/install/ubuntu/#firewall-limitations
     # Keeping it bound to localhost (which is the default) should be safe though
     # (that is, contrary to binding to 0.0.0.0)
-    # ports:
-    #   - "5984:5984"
+    ports:
+      - '7984:5984'
     volumes:
-      - 'couchdb:/opt/couchdb/data'
+      - './data/couchdb:/opt/couchdb/data'
     restart: unless-stopped
   elasticsearch:
+    profiles: [ 'dev', 'prod' ]
     image: elasticsearch:7.17.28
     environment:
       - 'http.host=elasticsearch'

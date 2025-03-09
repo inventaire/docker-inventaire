@@ -1,0 +1,14 @@
+services:
+  couchdb:
+    ports:
+      - "7984:5984"
+    volumes: !reset
+      - './data/couchdb:/opt/couchdb/data'
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+    volumes: !reset
+      - './data/elasticsearch:/usr/share/elasticsearch/data'
+
+volumes: !reset []

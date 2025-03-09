@@ -119,6 +119,13 @@ docker compose up --detach
 docker compose logs --follow --tail 500 inventaire
 ```
 
+## Development setup
+
+In development, you need a full access to the server and client source files, so it is recommended to install those outside of Docker. But it can still be convenient to use this Docker Compose project to run CouchDB and Elasticsearch. That can be done with the following command:
+```sh
+docker-compose -f ./docker-compose.yml -f ./docker-compose.dev.yml --profile dev up --detach
+```
+
 ## Tips
 
 General tips on how to run Inventaire can be found in the [server repository docs](https://git.inventaire.io/inventaire/tree/main/docs).
