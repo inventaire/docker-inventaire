@@ -3,7 +3,7 @@ FROM node:20-slim
 RUN apt-get update \
   && apt-get install -y curl git graphicsmagick inotify-tools jq \
   && apt-get clean && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /opt/inventaire \
+  && mkdir -p /opt/inventaire /opt/inventaire_leveldb /opt/inventaire_local_media_storage /opt/inventaire_backups \
   && chown -R 1000:1000 /opt
 
 # Default to the same user as the host (override from command line if needed)
@@ -28,7 +28,7 @@ RUN git clone https://git.inventaire.io/inventaire --depth 1 --branch "${GIT_REF
 WORKDIR /opt/inventaire/client
 
 # Include dev dependencies (webpack, svelte-checks) at first to be able to build during the postinstall script
-RUN npm ci \
+RUN npm ci --include=dev \
   && rm -rf node_modules \
   && npm ci --omit=dev --ignore-scripts \
   && npm cache clean --force

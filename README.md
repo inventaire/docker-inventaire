@@ -110,9 +110,10 @@ cd docker-inventaire
 git pull origin main
 # Pull the updated images
 docker compose pull
-# Stop and remove the previous `inventaire` container
-# Include the `nginx` container and `--volumes` as otherwise the volume shared between the `inventaire` and the `nginx` container keep the files from the previous image
-docker compose down inventaire nginx --volumes
+# Stop and remove the previous containers
+docker compose down
+# Remove the volume hosting inventaire server and client code, to let it be overriden by the updated inventaire image
+docker volume rm docker-inventaire_inventaire-server
 # Restart containers with the new image (with the --detach option, to be able to close the terminal)
 docker compose up --detach
 # Check that it restarted without errors

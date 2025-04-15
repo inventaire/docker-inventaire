@@ -21,6 +21,10 @@ module.exports = {
     username: '${COUCHDB_USER}',
     password: '${COUCHDB_PASSWORD}',
     hostname: 'couchdb',
+    backupFolder: '/opt/inventaire_backups',
+  },
+  leveldb: {
+    folder: '/opt/inventaire_leveldb'
   },
   elasticsearch: {
     origin: 'http://elasticsearch:9200',
@@ -52,6 +56,9 @@ module.exports = {
       publicURL: '${SWIFT_PUBLIC_URL}',
       tenantName: '${SWIFT_TENANT_NAME}',
       region: '${SWIFT_REGION}',
+    },
+    local: {
+      folder: '/opt/inventaire_local_media_storage'
     },
   },
 

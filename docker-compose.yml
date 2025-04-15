@@ -9,9 +9,13 @@ services:
     depends_on:
       - couchdb
       - elasticsearch
-    # Uncomment if you want to access the code:
     volumes:
       - inventaire-server:/opt/inventaire
+      # The following paths are outside /opt/inventaire so that the inventaire-server volume can be removed
+      # (as required when updating the server and client) without loosing their data
+      - inventaire-leveldb:/opt/inventaire_leveldb
+      - inventaire-local-media-storage:/opt/inventaire_local_media_storage
+      - inventaire-backups:/opt/inventaire_backups
     logging:
       options:
         max-size: "10m"
@@ -67,6 +71,7 @@ services:
       - inventaire-server:/opt/inventaire
       - certbot-www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
+      - nginx-cache:/tmp/nginx
     env_file: .env
     depends_on:
       # Required to be able to define the `inventaire` host as an upstream
@@ -87,3 +92,7 @@ volumes:
   elasticsearch:
   certbot-www:
   inventaire-server:
+  inventaire-leveldb:
+  inventaire-local-media-storage:
+  inventaire-backups:
+  nginx-cache:
